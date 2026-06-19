@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>World Cup Live Tables</title>
+    <link rel="stylesheet" href="./src/static-styles.css" />
+  </head>
+  <body>
+    <main class="appShell">
+      <header class="topbar">
+        <div>
+          <h1>World Cup Tables</h1>
+          <p id="snapshot"></p>
+        </div>
+        <div class="actions">
+          <div class="tabs" role="tablist" aria-label="Views">
+            <button class="active" data-view="groups" type="button">▦ Groups</button>
+            <button data-view="knockout" type="button">⌁ Knockout</button>
+          </div>
+          <div class="updated">↻ Run npm run fetch:data to refresh</div>
+        </div>
+      </header>
+
+      <section class="summaryStrip">
+        <div><strong id="finalCount">0</strong> finals</div>
+        <div><strong id="liveCount">0</strong> live</div>
+        <div><strong id="projectedCount">0</strong> projected</div>
+        <div class="sources">
+          <a href="https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard" target="_blank" rel="noreferrer">ESPN scores ↗</a>
+          <a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/groups-how-teams-qualify-tie-breakers" target="_blank" rel="noreferrer">FIFA format ↗</a>
+          <a href="https://en.wikipedia.org/wiki/Template:2026_FIFA_World_Cup_third-place_table" target="_blank" rel="noreferrer">495 third-place options ↗</a>
+        </div>
+      </section>
+
+      <section id="groupsView" class="groupGrid"></section>
+      <section id="knockoutView" class="knockoutLayout hidden"></section>
+    </main>
+    <script src="./src/data/worldcup-data.js"></script>
+    <script src="./src/static-app.js"></script>
+  </body>
+</html>

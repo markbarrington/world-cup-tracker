@@ -1,0 +1,532 @@
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #f7f8f5;
+  color: #111815;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background:
+    linear-gradient(90deg, rgba(20, 83, 45, 0.05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(20, 83, 45, 0.04) 1px, transparent 1px), #f7f8f5;
+  background-size: 32px 32px;
+}
+
+button {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.appShell {
+  width: min(1760px, calc(100vw - 32px));
+  margin: 0 auto;
+  padding: 22px 0 36px;
+}
+
+.topbar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 0 18px;
+  border-bottom: 1px solid #d8ded5;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+}
+
+h1 {
+  font-size: clamp(28px, 3.2vw, 46px);
+  line-height: 1;
+  letter-spacing: 0;
+  font-weight: 780;
+}
+
+.topbar p {
+  margin-top: 8px;
+  color: #617067;
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid #cad4cc;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 10px 24px rgba(21, 33, 25, 0.06);
+}
+
+.tabs button {
+  min-height: 34px;
+  padding: 0 13px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #405047;
+  font-size: 13px;
+  font-weight: 720;
+  cursor: pointer;
+}
+
+.tabs button.active {
+  background: #153c2b;
+  color: #fff;
+}
+
+.updated {
+  color: #66766c;
+  font-size: 12px;
+}
+
+.summaryStrip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 18px 0;
+  padding: 10px 12px;
+  border: 1px solid #d8ded5;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 8px;
+}
+
+.summaryStrip > div:not(.sources) {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #526056;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.summaryStrip strong {
+  color: #123426;
+}
+
+.sources {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.sources a {
+  padding: 5px 8px;
+  border-radius: 6px;
+  background: #edf2ec;
+  color: #345242;
+  font-size: 12px;
+  font-weight: 680;
+}
+
+.groupGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.groupCard,
+.thirdPanel,
+.bracketCanvas,
+.bracketMatch {
+  border: 1px solid #d4ddd5;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: 8px;
+}
+
+.groupCard {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.groupHeader,
+.panelTitle,
+.bracketHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 12px 10px;
+  border-bottom: 1px solid #e4e8e1;
+}
+
+.groupHeader h2,
+.panelTitle h2,
+.bracketHeader h2 {
+  font-size: 15px;
+  line-height: 1.1;
+  font-weight: 820;
+}
+
+.groupHeader span,
+.panelTitle span,
+.bracketHeader span {
+  color: #65736b;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.standings {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.standings th {
+  height: 28px;
+  padding: 0 8px;
+  color: #728078;
+  font-size: 10px;
+  font-weight: 760;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.standings th:first-child,
+.standings td:first-child {
+  text-align: left;
+}
+
+.standings td {
+  height: 34px;
+  padding: 0 8px;
+  border-top: 1px solid #edf0ea;
+  color: #243128;
+  font-size: 12px;
+  text-align: right;
+}
+
+.standings tr:nth-child(-n + 2) td:first-child {
+  box-shadow: inset 3px 0 #146c43;
+}
+
+.standings tr:nth-child(3) td:first-child {
+  box-shadow: inset 3px 0 #b45309;
+}
+
+.rank {
+  display: inline-grid;
+  place-items: center;
+  width: 19px;
+  height: 19px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: #eef3ed;
+  color: #536158;
+  font-size: 10px;
+  font-weight: 780;
+}
+
+.pts {
+  color: #0e3a29;
+  font-weight: 820;
+}
+
+.teamName {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  vertical-align: middle;
+}
+
+.teamName img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.teamName span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.scores {
+  border-top: 1px solid #e4e8e1;
+}
+
+.scoreRow {
+  display: grid;
+  grid-template-columns: 78px 1fr 72px;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border-top: 1px solid #f0f2ee;
+  color: #29362d;
+  font-size: 12px;
+}
+
+.scoreRow:first-child {
+  border-top: 0;
+}
+
+.scoreRow.live {
+  background: #fff8e8;
+}
+
+.scoreRow.projected {
+  color: #66736b;
+}
+
+.scoreRow.upcoming {
+  color: #66736b;
+}
+
+.date {
+  color: #748079;
+  font-size: 11px;
+}
+
+.scoreTeams {
+  display: grid;
+  grid-template-columns: 1fr 42px 1fr;
+  gap: 7px;
+  align-items: center;
+  text-align: center;
+}
+
+.scoreTeams span:first-child {
+  text-align: right;
+}
+
+.scoreTeams span:last-child {
+  text-align: left;
+}
+
+.scoreTeams strong {
+  color: #102b20;
+  font-size: 13px;
+}
+
+.scoreStatus {
+  text-align: right;
+  color: #6a756d;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.knockoutLayout {
+  display: grid;
+  grid-template-columns: 310px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.thirdPanel {
+  align-self: start;
+  overflow: hidden;
+}
+
+.thirdList {
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+}
+
+.thirdList li {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 54px 36px;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 11px;
+  border-top: 1px solid #edf0ea;
+  color: #6a756e;
+  font-size: 12px;
+}
+
+.thirdList li:first-child {
+  border-top: 0;
+}
+
+.thirdList li.advancing {
+  color: #17251d;
+  background: #f2f8f0;
+}
+
+.thirdList li > span:first-child {
+  font-weight: 800;
+}
+
+.thirdList strong {
+  text-align: right;
+  color: #143c2c;
+}
+
+.thirdList small {
+  color: #717d75;
+  text-align: right;
+  font-size: 11px;
+  font-weight: 760;
+}
+
+.ruleNote {
+  display: grid;
+  gap: 3px;
+  padding: 11px 12px;
+  border-top: 1px solid #dce4dc;
+  background: #123b2a;
+  color: #fff;
+  font-size: 12px;
+}
+
+.ruleNote span {
+  color: #bfd3c6;
+}
+
+.bracketCanvas {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.matchGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+
+.bracketMatch {
+  padding: 10px;
+  background: #fff;
+}
+
+.matchNo {
+  margin-bottom: 8px;
+  color: #738078;
+  font-size: 11px;
+  font-weight: 780;
+  text-transform: uppercase;
+}
+
+.bracketTeam {
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  min-height: 35px;
+  border-top: 1px solid #edf0ea;
+}
+
+.bracketTeam:first-of-type {
+  border-top: 0;
+}
+
+.slot {
+  display: inline-grid;
+  place-items: center;
+  width: 28px;
+  height: 22px;
+  border-radius: 6px;
+  background: #edf3ed;
+  color: #315342;
+  font-size: 11px;
+  font-weight: 820;
+}
+
+.ruleTag {
+  min-height: 30px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #ccd8cd;
+  color: #5d6b62;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+@media (max-width: 1280px) {
+  .groupGrid,
+  .matchGrid {
+    grid-template-columns: repeat(3, minmax(260px, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .topbar,
+  .summaryStrip {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .actions {
+    align-items: stretch;
+  }
+
+  .tabs {
+    width: 100%;
+  }
+
+  .tabs button {
+    flex: 1;
+  }
+
+  .sources {
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+
+  .groupGrid,
+  .matchGrid,
+  .knockoutLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .thirdPanel {
+    order: 2;
+  }
+
+  .bracketHeader {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .bracketHeader span {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 560px) {
+  .appShell {
+    width: min(100vw - 20px, 1760px);
+    padding-top: 12px;
+  }
+
+  .scoreRow {
+    grid-template-columns: 64px 1fr 58px;
+    padding: 0 7px;
+  }
+
+  .scoreTeams {
+    grid-template-columns: 1fr 34px 1fr;
+    gap: 4px;
+  }
+}

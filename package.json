@@ -1,0 +1,22 @@
+{
+  "name": "world-cup-tracker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "fetch:data": "node scripts/fetch-worldcup-data.mjs",
+    "prepare:pages": "node scripts/prepare-pages.mjs"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "lucide-react": "^0.468.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "vite": "^6.0.7"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.0"
+  }
+}
