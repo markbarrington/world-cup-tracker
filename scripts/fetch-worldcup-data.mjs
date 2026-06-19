@@ -5,8 +5,29 @@ const ESPN_SCOREBOARD =
 const THIRD_PLACE_TEMPLATE =
   "https://en.wikipedia.org/w/api.php?action=parse&page=Template:2026_FIFA_World_Cup_third-place_table&prop=wikitext&format=json&formatversion=2";
 
-const start = new Date("2026-06-11T00:00:00Z");
-const end = new Date("2026-06-27T00:00:00Z");
+const groupStart = new Date("2026-06-11T00:00:00Z");
+const groupEnd = new Date("2026-06-27T00:00:00Z");
+const roundOf32Start = new Date("2026-06-28T00:00:00Z");
+const roundOf32End = new Date("2026-07-04T00:00:00Z");
+
+const roundOf32SlotMap = {
+  "2A-2B": 73,
+  "1E-3RD": 74,
+  "1F-2C": 75,
+  "1C-2F": 76,
+  "1I-3RD": 77,
+  "2E-2I": 78,
+  "MEX-3RD": 79,
+  "1L-3RD": 80,
+  "1D-3RD": 81,
+  "1G-3RD": 82,
+  "2K-2L": 83,
+  "1H-2J": 84,
+  "1B-3RD": 85,
+  "1J-2H": 86,
+  "1K-3RD": 87,
+  "2D-2G": 88,
+};
 
 function ymd(date) {
   return date.toISOString().slice(0, 10).replaceAll("-", "");
@@ -103,17 +124,53 @@ function normalizeEvent(event) {
   };
 }
 
-async function fetchMatches() {
+async function fetchScoreboardRange(start, end) {
+  const events = [];
   const byId = new Map();
   for (let cursor = new Date(start); cursor <= end; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
     const date = ymd(cursor);
     const data = await fetchJson(`${ESPN_SCOREBOARD}?limit=100&dates=${date}`);
     for (const event of data.events ?? []) {
-      const normalized = normalizeEvent(event);
-      if (normalized) byId.set(normalized.id, normalized);
+      byId.set(event.id, event);
     }
   }
+  events.push(...byId.values());
+  return events.sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+async function fetchMatches() {
+  const byId = new Map();
+  for (const event of await fetchScoreboardRange(groupStart, groupEnd)) {
+    const normalized = normalizeEvent(event);
+    if (normalized) byId.set(normalized.id, normalized);
+  }
   return [...byId.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+async function fetchRoundOf32Schedule() {
+  return (await fetchScoreboardRange(roundOf32Start, roundOf32End))
+    .filter((event) => event.season?.slug === "round-of-32")
+    .map((event) => {
+      const competition = event.competitions?.[0];
+      const slots = (competition?.competitors ?? [])
+        .slice()
+        .sort((a, b) => a.order - b.order)
+        .map((competitor) => competitor.team?.abbreviation);
+      const key = slots.join("-");
+      const matchNumber = roundOf32SlotMap[key];
+      if (!matchNumber) return null;
+
+      return {
+        matchNumber,
+        id: event.id,
+        date: event.date,
+        venue: competition?.venue?.fullName ?? event.venue?.displayName ?? "",
+        city: competition?.venue?.address?.city ?? "",
+        sourceUrl: event.links?.find((link) => link.rel?.includes("summary"))?.href ?? "",
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.matchNumber - b.matchNumber);
 }
 
 function parseThirdPlaceRows(wikitext) {
@@ -169,6 +226,7 @@ const payload = {
       "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/groups-how-teams-qualify-tie-breakers",
   },
   matches: await fetchMatches(),
+  roundOf32Schedule: await fetchRoundOf32Schedule(),
   thirdPlaceRules: await fetchThirdPlaceRules(),
 };
 
@@ -182,4 +240,4 @@ await writeFile(
   `window.WORLD_CUP_DATA = ${JSON.stringify(payload, null, 2)};\n`,
 );
 
-console.log(`Wrote ${payload.matches.length} group matches and ${payload.thirdPlaceRules.length} third-place rules.`);
+console.log(`Wrote ${payload.matches.length} group matches, ${payload.roundOf32Schedule.length} Round of 32 games, and ${payload.thirdPlaceRules.length} third-place rules.`);

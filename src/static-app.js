@@ -169,6 +169,16 @@
     }).format(new Date(date));
   }
 
+  function formatBracketDate(date) {
+    return new Intl.DateTimeFormat(undefined, {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    }).format(new Date(date));
+  }
+
   function teamName(team) {
     return `<span class="teamName"><img src="${escapeHtml(team.logo)}" alt=""><span>${escapeHtml(team.shortName)}</span></span>`;
   }
@@ -260,11 +270,18 @@
           ${roundOf32.map((match) => {
             const thirdSlot = thirdPlaceMatchOrder[match.id];
             const rightSlot = thirdSlot ? rule?.assignments?.[thirdSlot] : match.right;
+            const schedule = data.roundOf32Schedule?.find((item) => item.matchNumber === match.id);
             return `
               <article class="bracketMatch">
                 <div class="matchNo">Match ${match.id}</div>
                 ${bracketTeam(match.left, slots[match.left])}
                 ${bracketTeam(rightSlot, slots[rightSlot])}
+                ${schedule ? `
+                  <div class="matchMeta">
+                    <span>${formatBracketDate(schedule.date)}</span>
+                    <span>${escapeHtml(schedule.venue)}${schedule.city ? ` · ${escapeHtml(schedule.city)}` : ""}</span>
+                  </div>
+                ` : ""}
                 <div class="ruleTag">${thirdSlot ? `Winner Group ${thirdSlot.slice(1)} gets ${rightSlot} by option ${rule.option}` : "Fixed runner-up pairing"}</div>
               </article>
             `;

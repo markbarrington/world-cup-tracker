@@ -99,15 +99,10 @@ h1 {
   color: #fff;
 }
 
-.updated {
-  color: #66766c;
-  font-size: 12px;
-}
-
 .summaryStrip {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
   margin: 18px 0;
   padding: 10px 12px;
@@ -474,6 +469,22 @@ h1 {
   color: #5d6b62;
   font-size: 11px;
   line-height: 1.35;
+}
+
+.matchMeta {
+  display: grid;
+  gap: 2px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #edf0ea;
+  color: #66736b;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.matchMeta span:first-child {
+  color: #26392d;
+  font-weight: 780;
 }
 
 @media (max-width: 1280px) {

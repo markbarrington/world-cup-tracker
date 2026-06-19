@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { CalendarDays, ExternalLink, GitBranch, RefreshCw, Table2 } from "lucide-react";
+import { CalendarDays, GitBranch, Table2 } from "lucide-react";
 import data from "./data/worldcup-data.json";
 import "./styles.css";
 
@@ -216,6 +216,16 @@ function formatTime(date) {
   }).format(new Date(date));
 }
 
+function formatBracketDate(date) {
+  return new Intl.DateTimeFormat(undefined, {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(date));
+}
+
 function TeamName({ team }) {
   return (
     <span className="teamName">
@@ -324,11 +334,18 @@ function KnockoutView() {
           {roundOf32.map((match) => {
             const thirdSlot = thirdPlaceMatchOrder[match.id];
             const rightSlot = thirdSlot ? rule?.assignments?.[thirdSlot] : match.right;
+            const schedule = data.roundOf32Schedule?.find((item) => item.matchNumber === match.id);
             return (
               <article className="bracketMatch" key={match.id}>
                 <div className="matchNo">Match {match.id}</div>
                 <BracketTeam slot={match.left} team={slots[match.left]} />
                 <BracketTeam slot={rightSlot} team={slots[rightSlot]} />
+                {schedule ? (
+                  <div className="matchMeta">
+                    <span>{formatBracketDate(schedule.date)}</span>
+                    <span>{schedule.venue}{schedule.city ? ` · ${schedule.city}` : ""}</span>
+                  </div>
+                ) : null}
                 {thirdSlot ? (
                   <div className="ruleTag">
                     {thirdPlaceSlots[thirdSlot]} gets {rightSlot} by option {rule?.option}
@@ -341,22 +358,6 @@ function KnockoutView() {
           })}
         </div>
       </section>
-    </div>
-  );
-}
-
-function Sources() {
-  return (
-    <div className="sources">
-      <a href="https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard" target="_blank" rel="noreferrer">
-        ESPN scores <ExternalLink size={13} />
-      </a>
-      <a href="https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/groups-how-teams-qualify-tie-breakers" target="_blank" rel="noreferrer">
-        FIFA format <ExternalLink size={13} />
-      </a>
-      <a href="https://en.wikipedia.org/wiki/Template:2026_FIFA_World_Cup_third-place_table" target="_blank" rel="noreferrer">
-        495 third-place options <ExternalLink size={13} />
-      </a>
     </div>
   );
 }
@@ -387,10 +388,6 @@ function App() {
               Knockout
             </button>
           </div>
-          <div className="updated">
-            <RefreshCw size={14} />
-            Run npm run fetch:data to refresh
-          </div>
         </div>
       </header>
 
@@ -408,7 +405,6 @@ function App() {
           <strong>{data.matches.filter((match) => !match.status.completed && match.status.state !== "in").length}</strong>
           projected
         </div>
-        <Sources />
       </div>
 
       {view === "groups" ? (

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T23:15:17.251Z",
+  "generatedAt": "2026-06-19T23:44:10.429Z",
   "sources": {
     "scores": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard",
     "thirdPlaceRules": "https://en.wikipedia.org/wiki/Template:2026_FIFA_World_Cup_third-place_table",
@@ -1145,8 +1145,8 @@
       "venue": "Gillette Stadium",
       "status": {
         "state": "in",
-        "description": "In Progress",
-        "detail": "53'",
+        "description": "Second Half",
+        "detail": "81'",
         "completed": false
       },
       "competitors": [
@@ -2374,12 +2374,12 @@
         "provider": "DraftKings",
         "moneyline": {
           "home": "-425",
-          "draw": "+550",
+          "draw": "+500",
           "away": "+1200"
         },
         "implied": {
           "home": 0.8095238095238095,
-          "draw": 0.15384615384615385,
+          "draw": 0.16666666666666666,
           "away": 0.07692307692307693
         },
         "favorite": "home",
@@ -3587,6 +3587,136 @@
         }
       },
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760483/argentina-jordan"
+    }
+  ],
+  "roundOf32Schedule": [
+    {
+      "matchNumber": 73,
+      "id": "760486",
+      "date": "2026-06-28T19:00Z",
+      "venue": "SoFi Stadium",
+      "city": "Inglewood, California",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760486/group-b-2nd-place-group-a-2nd-place"
+    },
+    {
+      "matchNumber": 74,
+      "id": "760489",
+      "date": "2026-06-29T20:30Z",
+      "venue": "Gillette Stadium",
+      "city": "Foxborough, Massachusetts",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760489/third-place-group-abcdf-group-e-winner"
+    },
+    {
+      "matchNumber": 75,
+      "id": "760488",
+      "date": "2026-06-30T01:00Z",
+      "venue": "Estadio BBVA",
+      "city": "Guadalupe",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760488/group-c-2nd-place-group-f-winner"
+    },
+    {
+      "matchNumber": 76,
+      "id": "760487",
+      "date": "2026-06-29T17:00Z",
+      "venue": "NRG Stadium",
+      "city": "Houston, Texas",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760487/group-f-2nd-place-group-c-winner"
+    },
+    {
+      "matchNumber": 77,
+      "id": "760492",
+      "date": "2026-06-30T21:00Z",
+      "venue": "MetLife Stadium",
+      "city": "East Rutherford, New Jersey",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760492/third-place-group-cdfgh-group-i-winner"
+    },
+    {
+      "matchNumber": 78,
+      "id": "760490",
+      "date": "2026-06-30T17:00Z",
+      "venue": "AT&T Stadium",
+      "city": "Arlington, Texas",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760490/group-i-2nd-place-group-e-2nd-place"
+    },
+    {
+      "matchNumber": 79,
+      "id": "760491",
+      "date": "2026-07-01T01:00Z",
+      "venue": "Estadio Banorte",
+      "city": "Mexico City",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760491/third-place-group-cefhi-mexico"
+    },
+    {
+      "matchNumber": 80,
+      "id": "760495",
+      "date": "2026-07-01T16:00Z",
+      "venue": "Mercedes-Benz Stadium",
+      "city": "Atlanta, Georgia",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760495/third-place-group-ehijk-group-l-winner"
+    },
+    {
+      "matchNumber": 81,
+      "id": "760494",
+      "date": "2026-07-02T00:00Z",
+      "venue": "Levi's Stadium",
+      "city": "Santa Clara, California",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760494/third-place-group-befij-group-d-winner"
+    },
+    {
+      "matchNumber": 82,
+      "id": "760493",
+      "date": "2026-07-01T20:00Z",
+      "venue": "Lumen Field",
+      "city": "Seattle, Washington",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760493/third-place-group-aehij-group-g-winner"
+    },
+    {
+      "matchNumber": 83,
+      "id": "760496",
+      "date": "2026-07-02T23:00Z",
+      "venue": "BMO Field",
+      "city": "Toronto",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760496/group-l-2nd-place-group-k-2nd-place"
+    },
+    {
+      "matchNumber": 84,
+      "id": "760497",
+      "date": "2026-07-02T19:00Z",
+      "venue": "SoFi Stadium",
+      "city": "Inglewood, California",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760497/group-j-2nd-place-group-h-winner"
+    },
+    {
+      "matchNumber": 85,
+      "id": "760498",
+      "date": "2026-07-03T03:00Z",
+      "venue": "BC Place",
+      "city": "Vancouver",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760498/third-place-group-efgij-group-b-winner"
+    },
+    {
+      "matchNumber": 86,
+      "id": "760500",
+      "date": "2026-07-03T22:00Z",
+      "venue": "Hard Rock Stadium",
+      "city": "Miami Gardens, Florida",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760500/group-h-2nd-place-group-j-winner"
+    },
+    {
+      "matchNumber": 87,
+      "id": "760501",
+      "date": "2026-07-04T01:30Z",
+      "venue": "GEHA Field at Arrowhead Stadium",
+      "city": "Kansas City, Missouri",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760501/third-place-group-deijl-group-k-winner"
+    },
+    {
+      "matchNumber": 88,
+      "id": "760499",
+      "date": "2026-07-03T18:00Z",
+      "venue": "AT&T Stadium",
+      "city": "Arlington, Texas",
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760499/group-g-2nd-place-group-d-2nd-place"
     }
   ],
   "thirdPlaceRules": [
