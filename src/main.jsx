@@ -260,17 +260,17 @@ function GroupCard({ group }) {
       </table>
       <div className="scores">
         {matches.map((match) => {
-          const score = currentScore(match);
+          const score = currentScore(match) ?? projectedScore(match);
           const [home, away] = match.competitors;
           return (
-            <a className={`scoreRow ${score?.source ?? "upcoming"}`} href={match.sourceUrl} target="_blank" rel="noreferrer" key={match.id}>
+            <a className={`scoreRow ${score.source}`} href={match.sourceUrl} target="_blank" rel="noreferrer" key={match.id}>
               <span className="date">{formatTime(match.date)}</span>
               <span className="scoreTeams">
                 <span>{home.abbreviation}</span>
-                <strong>{score ? `${score.home}-${score.away}` : "vs"}</strong>
+                <strong>{score.home}-{score.away}</strong>
                 <span>{away.abbreviation}</span>
               </span>
-              <span className="scoreStatus">{score?.label ?? "Scheduled"}</span>
+              <span className="scoreStatus">{score.source === "projected" ? "Projected" : score.label}</span>
             </a>
           );
         })}

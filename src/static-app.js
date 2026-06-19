@@ -198,13 +198,13 @@
           </table>
           <div class="scores">
             ${matches.map((match) => {
-              const score = currentScore(match);
+              const score = currentScore(match) || projectedScore(match);
               const [home, away] = match.competitors;
               return `
-                <a class="scoreRow ${score ? score.source : "upcoming"}" href="${escapeHtml(match.sourceUrl)}" target="_blank" rel="noreferrer">
+                <a class="scoreRow ${score.source}" href="${escapeHtml(match.sourceUrl)}" target="_blank" rel="noreferrer">
                   <span class="date">${formatTime(match.date)}</span>
-                  <span class="scoreTeams"><span>${home.abbreviation}</span><strong>${score ? `${score.home}-${score.away}` : "vs"}</strong><span>${away.abbreviation}</span></span>
-                  <span class="scoreStatus">${escapeHtml(score ? score.label : "Scheduled")}</span>
+                  <span class="scoreTeams"><span>${home.abbreviation}</span><strong>${score.home}-${score.away}</strong><span>${away.abbreviation}</span></span>
+                  <span class="scoreStatus">${escapeHtml(score.source === "projected" ? "Projected" : score.label)}</span>
                 </a>
               `;
             }).join("")}

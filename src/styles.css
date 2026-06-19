@@ -305,11 +305,25 @@ h1 {
 }
 
 .scoreRow.projected {
-  color: #66736b;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(52, 82, 66, 0.045),
+      rgba(52, 82, 66, 0.045) 5px,
+      rgba(255, 255, 255, 0.55) 5px,
+      rgba(255, 255, 255, 0.55) 10px
+    );
+  color: #69766e;
+  font-style: italic;
 }
 
-.scoreRow.upcoming {
-  color: #66736b;
+.scoreRow.projected .scoreTeams strong {
+  color: #4e5f54;
+  font-style: italic;
+}
+
+.scoreRow.projected .scoreStatus {
+  color: #7a857d;
 }
 
 .date {
