@@ -12,8 +12,16 @@ function ymd(date) {
   return date.toISOString().slice(0, 10).replaceAll("-", "");
 }
 
-function americanToProbability(odds) {
-  if (typeof odds !== "number") return null;
+function parseAmericanOdds(value) {
+  if (typeof value === "number") return value;
+  if (typeof value !== "string") return null;
+  const normalized = Number(value.replace(/[^\d+-]/g, ""));
+  return Number.isFinite(normalized) ? normalized : null;
+}
+
+function americanToProbability(value) {
+  const odds = parseAmericanOdds(value);
+  if (odds === null) return null;
   if (odds < 0) return Math.abs(odds) / (Math.abs(odds) + 100);
   return 100 / (odds + 100);
 }

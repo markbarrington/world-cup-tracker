@@ -1,5 +1,5 @@
 window.WORLD_CUP_DATA = {
-  "generatedAt": "2026-06-19T23:07:25.202Z",
+  "generatedAt": "2026-06-19T23:15:17.251Z",
   "sources": {
     "scores": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard",
     "thirdPlaceRules": "https://en.wikipedia.org/wiki/Template:2026_FIFA_World_Cup_third-place_table",
@@ -1145,8 +1145,8 @@ window.WORLD_CUP_DATA = {
       "venue": "Gillette Stadium",
       "status": {
         "state": "in",
-        "description": "Halftime",
-        "detail": "HT",
+        "description": "In Progress",
+        "detail": "53'",
         "completed": false
       },
       "competitors": [
@@ -1181,11 +1181,11 @@ window.WORLD_CUP_DATA = {
           "away": "-140"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.19047619047619047,
+          "draw": 0.2702702702702703,
+          "away": 0.5833333333333334
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -1235,14 +1235,14 @@ window.WORLD_CUP_DATA = {
         "moneyline": {
           "home": "-900",
           "draw": "+950",
-          "away": "+1900"
+          "away": "+2000"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.9,
+          "draw": 0.09523809523809523,
+          "away": 0.047619047619047616
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 3.5,
         "spread": {
           "home": "-2.5",
@@ -1295,11 +1295,11 @@ window.WORLD_CUP_DATA = {
           "away": "+285"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.47619047619047616,
+          "draw": 0.29411764705882354,
+          "away": 0.2597402597402597
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -1352,11 +1352,11 @@ window.WORLD_CUP_DATA = {
           "away": "+360"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.574468085106383,
+          "draw": 0.24390243902439024,
+          "away": 0.21739130434782608
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -1409,11 +1409,11 @@ window.WORLD_CUP_DATA = {
           "away": "+475"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.6551724137931034,
+          "draw": 0.2127659574468085,
+          "away": 0.17391304347826086
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-1.5",
@@ -1466,11 +1466,11 @@ window.WORLD_CUP_DATA = {
           "away": "+2500"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.9090909090909091,
+          "draw": 0.09523809523809523,
+          "away": 0.038461538461538464
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 3.5,
         "spread": {
           "home": "-2.5",
@@ -1523,11 +1523,11 @@ window.WORLD_CUP_DATA = {
           "away": "-190"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.14285714285714285,
+          "draw": 0.24390243902439024,
+          "away": 0.6551724137931034
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -1580,11 +1580,11 @@ window.WORLD_CUP_DATA = {
           "away": "+2500"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.9090909090909091,
+          "draw": 0.09523809523809523,
+          "away": 0.038461538461538464
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 3.5,
         "spread": {
           "home": "-2.5",
@@ -1637,11 +1637,11 @@ window.WORLD_CUP_DATA = {
           "away": "+650"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.6923076923076923,
+          "draw": 0.21739130434782608,
+          "away": 0.13333333333333333
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-1.5",
@@ -1694,11 +1694,11 @@ window.WORLD_CUP_DATA = {
           "away": "+700"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.6825396825396826,
+          "draw": 0.23809523809523808,
+          "away": 0.125
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-1.5",
@@ -1751,11 +1751,11 @@ window.WORLD_CUP_DATA = {
           "away": "-160"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.18181818181818182,
+          "draw": 0.24390243902439024,
+          "away": 0.6153846153846154
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -1808,11 +1808,11 @@ window.WORLD_CUP_DATA = {
           "away": "+500"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.6296296296296297,
+          "draw": 0.25,
+          "away": 0.16666666666666666
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -1865,11 +1865,11 @@ window.WORLD_CUP_DATA = {
           "away": "+2800"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.9230769230769231,
+          "draw": 0.08333333333333333,
+          "away": 0.034482758620689655
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 3.5,
         "spread": {
           "home": "-2.5",
@@ -1922,11 +1922,11 @@ window.WORLD_CUP_DATA = {
           "away": "+195"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.425531914893617,
+          "draw": 0.2857142857142857,
+          "away": 0.3389830508474576
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -1979,11 +1979,11 @@ window.WORLD_CUP_DATA = {
           "away": "-175"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.16666666666666666,
+          "draw": 0.23809523809523808,
+          "away": 0.6363636363636364
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -2036,11 +2036,11 @@ window.WORLD_CUP_DATA = {
           "away": "+1400"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.8333333333333334,
+          "draw": 0.14285714285714285,
+          "away": 0.06666666666666667
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-1.5",
@@ -2093,11 +2093,11 @@ window.WORLD_CUP_DATA = {
           "away": "+1300"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.8181818181818182,
+          "draw": 0.15384615384615385,
+          "away": 0.07142857142857142
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-1.5",
@@ -2150,11 +2150,11 @@ window.WORLD_CUP_DATA = {
           "away": "-185"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.15384615384615385,
+          "draw": 0.24390243902439024,
+          "away": 0.6491228070175439
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -2207,11 +2207,11 @@ window.WORLD_CUP_DATA = {
           "away": "+650"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.6721311475409836,
+          "draw": 0.23255813953488372,
+          "away": 0.13333333333333333
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-1.5",
@@ -2264,11 +2264,11 @@ window.WORLD_CUP_DATA = {
           "away": "+550"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.6875,
+          "draw": 0.20408163265306123,
+          "away": 0.15384615384615385
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-1.5",
@@ -2321,11 +2321,11 @@ window.WORLD_CUP_DATA = {
           "away": "+220"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.40816326530612246,
+          "draw": 0.3225806451612903,
+          "away": 0.3125
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -2378,11 +2378,11 @@ window.WORLD_CUP_DATA = {
           "away": "+1200"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.8095238095238095,
+          "draw": 0.15384615384615385,
+          "away": 0.07692307692307693
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-1.5",
@@ -2435,11 +2435,11 @@ window.WORLD_CUP_DATA = {
           "away": "-255"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.14285714285714285,
+          "draw": 0.18181818181818182,
+          "away": 0.7183098591549296
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+1.5",
@@ -2492,11 +2492,11 @@ window.WORLD_CUP_DATA = {
           "away": "+110"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.29411764705882354,
+          "draw": 0.2702702702702703,
+          "away": 0.47619047619047616
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -2549,11 +2549,11 @@ window.WORLD_CUP_DATA = {
           "away": "-155"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.18181818181818182,
+          "draw": 0.25,
+          "away": 0.6078431372549019
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -2606,11 +2606,11 @@ window.WORLD_CUP_DATA = {
           "away": "-700"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.05263157894736842,
+          "draw": 0.1111111111111111,
+          "away": 0.875
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 3.5,
         "spread": {
           "home": "+2.5",
@@ -2663,11 +2663,11 @@ window.WORLD_CUP_DATA = {
           "away": "-145"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.2,
+          "draw": 0.25,
+          "away": 0.5918367346938775
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -2720,11 +2720,11 @@ window.WORLD_CUP_DATA = {
           "away": "+240"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.46511627906976744,
+          "draw": 0.2857142857142857,
+          "away": 0.29411764705882354
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -2777,11 +2777,11 @@ window.WORLD_CUP_DATA = {
           "away": "-310"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.10526315789473684,
+          "draw": 0.18181818181818182,
+          "away": 0.7560975609756098
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+1.5",
@@ -2834,11 +2834,11 @@ window.WORLD_CUP_DATA = {
           "away": "+255"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.47619047619047616,
+          "draw": 0.2857142857142857,
+          "away": 0.28169014084507044
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -2891,11 +2891,11 @@ window.WORLD_CUP_DATA = {
           "away": "+150"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.38461538461538464,
+          "draw": 0.2597402597402597,
+          "away": 0.4
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -2948,11 +2948,11 @@ window.WORLD_CUP_DATA = {
           "away": "-125"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.23255813953488372,
+          "draw": 0.2564102564102564,
+          "away": 0.5555555555555556
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -3005,11 +3005,11 @@ window.WORLD_CUP_DATA = {
           "away": "+1000"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.7674418604651163,
+          "draw": 0.18181818181818182,
+          "away": 0.09090909090909091
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-1.5",
@@ -3062,11 +3062,11 @@ window.WORLD_CUP_DATA = {
           "away": "+140"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.36363636363636365,
+          "draw": 0.26666666666666666,
+          "away": 0.4166666666666667
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -3119,11 +3119,11 @@ window.WORLD_CUP_DATA = {
           "away": "-185"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.16666666666666666,
+          "draw": 0.23255813953488372,
+          "away": 0.6491228070175439
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -3176,11 +3176,11 @@ window.WORLD_CUP_DATA = {
           "away": "+300"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.47619047619047616,
+          "draw": 0.31746031746031744,
+          "away": 0.25
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -3233,11 +3233,11 @@ window.WORLD_CUP_DATA = {
           "away": "-425"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.07692307692307693,
+          "draw": 0.15384615384615385,
+          "away": 0.8095238095238095
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+1.5",
@@ -3290,11 +3290,11 @@ window.WORLD_CUP_DATA = {
           "away": "+500"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.6296296296296297,
+          "draw": 0.24390243902439024,
+          "away": 0.16666666666666666
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -3347,11 +3347,11 @@ window.WORLD_CUP_DATA = {
           "away": "-390"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.1,
+          "draw": 0.14285714285714285,
+          "away": 0.7959183673469388
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+1.5",
@@ -3404,11 +3404,11 @@ window.WORLD_CUP_DATA = {
           "away": "+110"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.273972602739726,
+          "draw": 0.2857142857142857,
+          "away": 0.47619047619047616
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -3461,11 +3461,11 @@ window.WORLD_CUP_DATA = {
           "away": "+240"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.47619047619047616,
+          "draw": 0.273972602739726,
+          "away": 0.29411764705882354
         },
-        "favorite": null,
+        "favorite": "home",
         "overUnder": 2.5,
         "spread": {
           "home": "-0.5",
@@ -3518,11 +3518,11 @@ window.WORLD_CUP_DATA = {
           "away": "+155"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.32786885245901637,
+          "draw": 0.3225806451612903,
+          "away": 0.39215686274509803
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+0.5",
@@ -3575,11 +3575,11 @@ window.WORLD_CUP_DATA = {
           "away": "-525"
         },
         "implied": {
-          "home": null,
-          "draw": null,
-          "away": null
+          "home": 0.07142857142857142,
+          "draw": 0.13333333333333333,
+          "away": 0.84
         },
-        "favorite": null,
+        "favorite": "away",
         "overUnder": 2.5,
         "spread": {
           "home": "+1.5",
