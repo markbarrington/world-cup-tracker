@@ -33,14 +33,14 @@
     { id: 88, left: "2D", right: "2G" },
   ];
   const bracketPaths = [
-    { id: 1, label: "Round of 16 path 1", matches: [73, 74] },
-    { id: 2, label: "Round of 16 path 2", matches: [76, 78] },
-    { id: 5, label: "Round of 16 path 5", matches: [84, 83] },
-    { id: 6, label: "Round of 16 path 6", matches: [82, 81] },
-    { id: 3, label: "Round of 16 path 3", matches: [75, 77] },
-    { id: 4, label: "Round of 16 path 4", matches: [79, 80] },
-    { id: 7, label: "Round of 16 path 7", matches: [88, 87] },
-    { id: 8, label: "Round of 16 path 8", matches: [85, 86] },
+    { id: 89, label: "Round of 16 M89", next: "W74 vs W77", matches: [74, 77] },
+    { id: 90, label: "Round of 16 M90", next: "W73 vs W75", matches: [73, 75] },
+    { id: 93, label: "Round of 16 M93", next: "W83 vs W84", matches: [83, 84] },
+    { id: 94, label: "Round of 16 M94", next: "W81 vs W82", matches: [81, 82] },
+    { id: 91, label: "Round of 16 M91", next: "W76 vs W78", matches: [76, 78] },
+    { id: 92, label: "Round of 16 M92", next: "W79 vs W80", matches: [79, 80] },
+    { id: 95, label: "Round of 16 M95", next: "W86 vs W88", matches: [86, 88] },
+    { id: 96, label: "Round of 16 M96", next: "W85 vs W87", matches: [85, 87] },
   ];
 
   function ymd(date) {
@@ -420,11 +420,11 @@
         <div class="ruleNote"><strong>Annex C option ${rule ? rule.option : "n/a"}</strong><span>${advancingThirds.map((row) => row.group).join(", ")} advance.</span></div>
       </aside>
       <section class="bracketCanvas">
-        <div class="bracketHeader"><h2>Round of 32 projection</h2><span>Grouped by FIFA bracket path</span></div>
+        <div class="bracketHeader"><h2>Round of 32 projection</h2><span>Grouped in FIFA bracket order</span></div>
         <div class="pathGrid">
           ${bracketPaths.map((path) => `
             <section class="pathGroup">
-              <div class="pathHeader"><span>${path.label}</span><small>Winners meet next</small></div>
+              <div class="pathHeader"><span>${path.label}</span><small>${path.next}</small></div>
               ${path.matches.map((matchId) => {
                 const match = matchesById[matchId];
                 const thirdSlot = thirdPlaceMatchOrder[match.id];
