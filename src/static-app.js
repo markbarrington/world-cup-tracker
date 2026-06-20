@@ -4,11 +4,9 @@
   const PRE_MATCH_REFRESH_MS = 5 * 60 * 1000;
   const IDLE_REFRESH_MS = 30 * 60 * 1000;
   const ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard";
-  const THIRD_PLACE_TEMPLATE =
-    "https://en.wikipedia.org/w/api.php?origin=*&action=parse&page=Template:2026_FIFA_World_Cup_third-place_table&prop=wikitext&format=json&formatversion=2";
+  const THIRD_PLACE_RULES_URL = "./src/data/third-place-rules.json";
+  const THIRD_PLACE_SOURCE = "https://en.wikipedia.org/wiki/Template:2026_FIFA_World_Cup_third-place_table";
   const groupStart = new Date("2026-06-11T00:00:00Z");
-  const groupEnd = new Date("2026-06-27T00:00:00Z");
-  const roundOf32Start = new Date("2026-06-28T00:00:00Z");
   const roundOf32End = new Date("2026-07-04T00:00:00Z");
   const groups = "ABCDEFGHIJKL".split("");
   let refreshTimer = null;
@@ -16,7 +14,7 @@
     generatedAt: null,
     sources: {
       scores: ESPN_SCOREBOARD,
-      thirdPlaceRules: THIRD_PLACE_TEMPLATE,
+      thirdPlaceRules: THIRD_PLACE_SOURCE,
     },
     matches: [],
     roundOf32Schedule: [],
@@ -185,8 +183,7 @@
     };
   }
 
-  async function fetchFreshMatches() {
-    const events = await fetchScoreboardRange(groupStart, groupEnd);
+  function extractFreshMatches(events) {
     const byId = new Map();
     for (const event of events) {
       const normalized = normalizeEvent(event);
@@ -195,19 +192,19 @@
     return [...byId.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
   }
 
-  async function fetchScoreboardRange(start, end) {
+  async function fetchTournamentEvents() {
+    const scoreboard = await fetchJson(
+      `${ESPN_SCOREBOARD}?limit=300&dates=${ymd(groupStart)}-${ymd(roundOf32End)}`,
+    );
     const byId = new Map();
-    for (let cursor = new Date(start); cursor <= end; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
-      const scoreboard = await fetchJson(`${ESPN_SCOREBOARD}?limit=100&dates=${ymd(cursor)}`);
-      for (const event of scoreboard.events ?? []) {
-        byId.set(event.id, event);
-      }
+    for (const event of scoreboard.events ?? []) {
+      byId.set(event.id, event);
     }
     return [...byId.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
   }
 
-  async function fetchRoundOf32Schedule() {
-    return (await fetchScoreboardRange(roundOf32Start, roundOf32End))
+  function extractRoundOf32Schedule(events) {
+    return events
       .filter((event) => event.season?.slug === "round-of-32")
       .map((event) => {
         const competition = event.competitions?.[0];
@@ -232,58 +229,23 @@
       .sort((a, b) => a.matchNumber - b.matchNumber);
   }
 
-  function parseThirdPlaceRows(wikitext) {
-    const columns = ["1A", "1B", "1D", "1E", "1G", "1I", "1K", "1L"];
-    return wikitext
-      .split(/\n\|-\n/)
-      .filter((block) => /! scope="row" \|\s*\d+/.test(block))
-      .map((block) => {
-        const option = Number(block.match(/! scope="row" \|\s*(\d+)/)?.[1]);
-        const lines = block
-          .split("\n")
-          .map((line) => line.trim())
-          .filter((line) => line.startsWith("|") && !line.startsWith("|-") && !line.includes("rowspan"));
-        const cells = lines.flatMap((line) => line.replace(/^\|\s*/, "").split(/\s*\|\|\s*/));
-
-        const ruleGroups = cells
-          .slice(0, 12)
-          .map((cell) => cell.match(/'''([A-L])'''/)?.[1])
-          .filter(Boolean);
-
-        const assignedGroups = cells
-          .slice(12)
-          .map((cell) => cell.match(/3([A-L])/)?.[1])
-          .filter(Boolean);
-
-        if (ruleGroups.length !== 8 || assignedGroups.length !== 8) {
-          throw new Error(`Could not parse third-place option ${option}`);
-        }
-
-        return {
-          option,
-          groups: ruleGroups,
-          key: ruleGroups.join(""),
-          assignments: Object.fromEntries(columns.map((column, index) => [column, `3${assignedGroups[index]}`])),
-        };
-      });
-  }
-
   async function fetchThirdPlaceRules() {
-    const payload = await fetchJson(THIRD_PLACE_TEMPLATE);
-    return parseThirdPlaceRows(payload.parse.wikitext);
+    if (Array.isArray(window.WORLD_CUP_THIRD_PLACE_RULES) && window.WORLD_CUP_THIRD_PLACE_RULES.length) {
+      return window.WORLD_CUP_THIRD_PLACE_RULES;
+    }
+    if (data.thirdPlaceRules.length) return data.thirdPlaceRules;
+    return fetchJson(THIRD_PLACE_RULES_URL);
   }
 
   async function fetchFreshData() {
-    const [matches, roundOf32Schedule, thirdPlaceRules] = await Promise.all([
-      fetchFreshMatches(),
-      fetchRoundOf32Schedule(),
-      fetchThirdPlaceRules(),
-    ]);
+    const [events, thirdPlaceRules] = await Promise.all([fetchTournamentEvents(), fetchThirdPlaceRules()]);
+    const matches = extractFreshMatches(events);
+    const roundOf32Schedule = extractRoundOf32Schedule(events);
     return {
       generatedAt: new Date().toISOString(),
       sources: {
         scores: ESPN_SCOREBOARD,
-        thirdPlaceRules: THIRD_PLACE_TEMPLATE,
+        thirdPlaceRules: THIRD_PLACE_SOURCE,
       },
       matches,
       roundOf32Schedule,
