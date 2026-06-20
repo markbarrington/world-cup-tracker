@@ -1,5 +1,8 @@
 (function () {
-  const data = window.WORLD_CUP_DATA;
+  let data = window.WORLD_CUP_DATA;
+  const ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard";
+  const groupStart = new Date("2026-06-11T00:00:00Z");
+  const groupEnd = new Date("2026-06-27T00:00:00Z");
   const groups = "ABCDEFGHIJKL".split("");
   const thirdPlaceMatchOrder = {
     74: "1E",
@@ -29,6 +32,112 @@
     { id: 87, left: "1K", right: "3?" },
     { id: 88, left: "2D", right: "2G" },
   ];
+
+  function ymd(date) {
+    return date.toISOString().slice(0, 10).replaceAll("-", "");
+  }
+
+  function parseAmericanOdds(value) {
+    if (typeof value === "number") return value;
+    if (typeof value !== "string") return null;
+    const normalized = Number(value.replace(/[^\d+-]/g, ""));
+    return Number.isFinite(normalized) ? normalized : null;
+  }
+
+  function americanToProbability(value) {
+    const odds = parseAmericanOdds(value);
+    if (odds === null) return null;
+    if (odds < 0) return Math.abs(odds) / (Math.abs(odds) + 100);
+    return 100 / (odds + 100);
+  }
+
+  function cleanOdds(odds) {
+    const raw = odds?.moneyline;
+    if (!raw) return null;
+
+    const moneyline = {
+      home: raw.home?.close?.odds ?? raw.home?.open?.odds ?? null,
+      draw: raw.draw?.close?.odds ?? raw.draw?.open?.odds ?? null,
+      away: raw.away?.close?.odds ?? raw.away?.open?.odds ?? null,
+    };
+
+    const implied = Object.fromEntries(
+      Object.entries(moneyline).map(([key, value]) => [key, americanToProbability(value)]),
+    );
+
+    const favorite = Object.entries(implied)
+      .filter(([, value]) => value !== null)
+      .sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+
+    return {
+      provider: odds.provider?.name ?? "Odds",
+      moneyline,
+      implied,
+      favorite,
+      overUnder: odds.overUnder ?? null,
+      spread: {
+        home: odds.pointSpread?.home?.close?.line ?? odds.pointSpread?.home?.open?.line ?? null,
+        away: odds.pointSpread?.away?.close?.line ?? odds.pointSpread?.away?.open?.line ?? null,
+      },
+    };
+  }
+
+  async function fetchJson(url) {
+    const response = await fetch(url, { headers: { accept: "application/json,text/plain,*/*" } });
+    if (!response.ok) throw new Error(`Fetch failed ${response.status}`);
+    return response.json();
+  }
+
+  function normalizeEvent(event) {
+    const competition = event.competitions?.[0];
+    const group = competition?.altGameNote?.match(/Group ([A-L])/)?.[1];
+    if (!group || event.season?.slug !== "group-stage") return null;
+
+    return {
+      id: event.id,
+      date: event.date,
+      group,
+      name: event.name,
+      venue: competition?.venue?.fullName ?? event.venue?.displayName ?? "",
+      status: {
+        state: competition?.status?.type?.state ?? event.status?.type?.state ?? "pre",
+        description: competition?.status?.type?.description ?? event.status?.type?.description ?? "",
+        detail: competition?.status?.type?.shortDetail ?? competition?.status?.displayClock ?? "",
+        completed: Boolean(competition?.status?.type?.completed),
+      },
+      competitors: competition.competitors.map((competitor) => ({
+        id: competitor.team.id,
+        name: competitor.team.displayName,
+        shortName: competitor.team.shortDisplayName,
+        abbreviation: competitor.team.abbreviation,
+        logo: competitor.team.logo,
+        color: competitor.team.color ? `#${competitor.team.color}` : "#111827",
+        homeAway: competitor.homeAway,
+        score: Number(competitor.score ?? 0),
+        winner: competitor.winner ?? false,
+      })),
+      odds: cleanOdds(competition.odds?.find(Boolean)),
+      sourceUrl: event.links?.find((link) => link.rel?.includes("summary"))?.href ?? "",
+    };
+  }
+
+  async function fetchFreshMatches() {
+    const byId = new Map();
+    for (let cursor = new Date(groupStart); cursor <= groupEnd; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
+      const scoreboard = await fetchJson(`${ESPN_SCOREBOARD}?limit=100&dates=${ymd(cursor)}`);
+      for (const event of scoreboard.events ?? []) {
+        const normalized = normalizeEvent(event);
+        if (normalized) byId.set(normalized.id, normalized);
+      }
+    }
+    return [...byId.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
+  }
+
+  async function refreshFromEspn() {
+    const matches = await fetchFreshMatches();
+    data = { ...data, generatedAt: new Date().toISOString(), matches };
+    renderAll("Live ESPN refresh");
+  }
 
   function escapeHtml(value) {
     return String(value ?? "").replace(/[&<>"']/g, (char) => ({
@@ -334,18 +443,25 @@
     document.getElementById("knockoutView").classList.toggle("hidden", view !== "knockout");
   }
 
-  const latest = data.matches
-    .filter((match) => match.status.state === "in" || match.status.completed)
-    .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
-  document.getElementById("snapshot").textContent =
-    `Latest snapshot: ${new Date(data.generatedAt).toLocaleString()} · Last active match: ${latest?.name ?? "none"}`;
-  document.getElementById("finalCount").textContent = data.matches.filter((match) => match.status.completed).length;
-  document.getElementById("liveCount").textContent = data.matches.filter((match) => match.status.state === "in").length;
-  document.getElementById("projectedCount").textContent = data.matches.filter((match) => !match.status.completed && match.status.state !== "in").length;
+  function renderAll(sourceLabel = "Snapshot") {
+    const latest = data.matches
+      .filter((match) => match.status.state === "in" || match.status.completed)
+      .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+    document.getElementById("snapshot").textContent =
+      `${sourceLabel}: ${new Date(data.generatedAt).toLocaleString()} · Last active match: ${latest?.name ?? "none"}`;
+    document.getElementById("finalCount").textContent = data.matches.filter((match) => match.status.completed).length;
+    document.getElementById("liveCount").textContent = data.matches.filter((match) => match.status.state === "in").length;
+    document.getElementById("projectedCount").textContent = data.matches.filter((match) => !match.status.completed && match.status.state !== "in").length;
+    renderGroups();
+    renderKnockout();
+  }
 
-  renderGroups();
-  renderKnockout();
+  renderAll();
   document.querySelectorAll("[data-view]").forEach((button) => {
     button.addEventListener("click", () => setView(button.dataset.view));
   });
+  refreshFromEspn().catch((error) => console.warn("Live ESPN refresh failed", error));
+  setInterval(() => {
+    refreshFromEspn().catch((error) => console.warn("Live ESPN refresh failed", error));
+  }, 120000);
 })();
