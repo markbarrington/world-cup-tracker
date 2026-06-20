@@ -1,9 +1,27 @@
 (function () {
-  let data = window.WORLD_CUP_DATA;
+  const CACHE_KEY = "worldCupLiveData:v1";
+  const ACTIVE_REFRESH_MS = 30 * 1000;
+  const PRE_MATCH_REFRESH_MS = 5 * 60 * 1000;
+  const IDLE_REFRESH_MS = 30 * 60 * 1000;
   const ESPN_SCOREBOARD = "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard";
+  const THIRD_PLACE_TEMPLATE =
+    "https://en.wikipedia.org/w/api.php?origin=*&action=parse&page=Template:2026_FIFA_World_Cup_third-place_table&prop=wikitext&format=json&formatversion=2";
   const groupStart = new Date("2026-06-11T00:00:00Z");
   const groupEnd = new Date("2026-06-27T00:00:00Z");
+  const roundOf32Start = new Date("2026-06-28T00:00:00Z");
+  const roundOf32End = new Date("2026-07-04T00:00:00Z");
   const groups = "ABCDEFGHIJKL".split("");
+  let refreshTimer = null;
+  let data = loadCachedData() || {
+    generatedAt: null,
+    sources: {
+      scores: ESPN_SCOREBOARD,
+      thirdPlaceRules: THIRD_PLACE_TEMPLATE,
+    },
+    matches: [],
+    roundOf32Schedule: [],
+    thirdPlaceRules: [],
+  };
   const thirdPlaceMatchOrder = {
     74: "1E",
     77: "1I",
@@ -42,6 +60,42 @@
     { id: 95, label: "Round of 16 M95", next: "W86 vs W88", matches: [86, 88] },
     { id: 96, label: "Round of 16 M96", next: "W85 vs W87", matches: [85, 87] },
   ];
+  const roundOf32SlotMap = {
+    "2A-2B": 73,
+    "1E-3RD": 74,
+    "1F-2C": 75,
+    "1C-2F": 76,
+    "1I-3RD": 77,
+    "2E-2I": 78,
+    "MEX-3RD": 79,
+    "1L-3RD": 80,
+    "1D-3RD": 81,
+    "1G-3RD": 82,
+    "2K-2L": 83,
+    "1H-2J": 84,
+    "1B-3RD": 85,
+    "1J-2H": 86,
+    "1K-3RD": 87,
+    "2D-2G": 88,
+  };
+
+  function loadCachedData() {
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+      if (!cached?.matches?.length || !cached?.thirdPlaceRules?.length) return null;
+      return cached;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveCachedData(payload) {
+    try {
+      localStorage.setItem(CACHE_KEY, JSON.stringify(payload));
+    } catch {
+      // Cache is a convenience only. Private browsing/storage quota should not break the app.
+    }
+  }
 
   function ymd(date) {
     return date.toISOString().slice(0, 10).replaceAll("-", "");
@@ -132,21 +186,140 @@
   }
 
   async function fetchFreshMatches() {
+    const events = await fetchScoreboardRange(groupStart, groupEnd);
     const byId = new Map();
-    for (let cursor = new Date(groupStart); cursor <= groupEnd; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
+    for (const event of events) {
+      const normalized = normalizeEvent(event);
+      if (normalized) byId.set(normalized.id, normalized);
+    }
+    return [...byId.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
+  }
+
+  async function fetchScoreboardRange(start, end) {
+    const byId = new Map();
+    for (let cursor = new Date(start); cursor <= end; cursor.setUTCDate(cursor.getUTCDate() + 1)) {
       const scoreboard = await fetchJson(`${ESPN_SCOREBOARD}?limit=100&dates=${ymd(cursor)}`);
       for (const event of scoreboard.events ?? []) {
-        const normalized = normalizeEvent(event);
-        if (normalized) byId.set(normalized.id, normalized);
+        byId.set(event.id, event);
       }
     }
     return [...byId.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
   }
 
-  async function refreshFromEspn() {
-    const matches = await fetchFreshMatches();
-    data = { ...data, generatedAt: new Date().toISOString(), matches };
-    renderAll("Live ESPN refresh");
+  async function fetchRoundOf32Schedule() {
+    return (await fetchScoreboardRange(roundOf32Start, roundOf32End))
+      .filter((event) => event.season?.slug === "round-of-32")
+      .map((event) => {
+        const competition = event.competitions?.[0];
+        const slots = (competition?.competitors || [])
+          .slice()
+          .sort((a, b) => a.order - b.order)
+          .map((competitor) => competitor.team?.abbreviation);
+        const key = slots.join("-");
+        const matchNumber = roundOf32SlotMap[key];
+        if (!matchNumber) return null;
+
+        return {
+          matchNumber,
+          id: event.id,
+          date: event.date,
+          venue: competition?.venue?.fullName || event.venue?.displayName || "",
+          city: competition?.venue?.address?.city || "",
+          sourceUrl: event.links?.find((link) => link.rel?.includes("summary"))?.href || "",
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.matchNumber - b.matchNumber);
+  }
+
+  function parseThirdPlaceRows(wikitext) {
+    const columns = ["1A", "1B", "1D", "1E", "1G", "1I", "1K", "1L"];
+    return wikitext
+      .split(/\n\|-\n/)
+      .filter((block) => /! scope="row" \|\s*\d+/.test(block))
+      .map((block) => {
+        const option = Number(block.match(/! scope="row" \|\s*(\d+)/)?.[1]);
+        const lines = block
+          .split("\n")
+          .map((line) => line.trim())
+          .filter((line) => line.startsWith("|") && !line.startsWith("|-") && !line.includes("rowspan"));
+        const cells = lines.flatMap((line) => line.replace(/^\|\s*/, "").split(/\s*\|\|\s*/));
+
+        const ruleGroups = cells
+          .slice(0, 12)
+          .map((cell) => cell.match(/'''([A-L])'''/)?.[1])
+          .filter(Boolean);
+
+        const assignedGroups = cells
+          .slice(12)
+          .map((cell) => cell.match(/3([A-L])/)?.[1])
+          .filter(Boolean);
+
+        if (ruleGroups.length !== 8 || assignedGroups.length !== 8) {
+          throw new Error(`Could not parse third-place option ${option}`);
+        }
+
+        return {
+          option,
+          groups: ruleGroups,
+          key: ruleGroups.join(""),
+          assignments: Object.fromEntries(columns.map((column, index) => [column, `3${assignedGroups[index]}`])),
+        };
+      });
+  }
+
+  async function fetchThirdPlaceRules() {
+    const payload = await fetchJson(THIRD_PLACE_TEMPLATE);
+    return parseThirdPlaceRows(payload.parse.wikitext);
+  }
+
+  async function fetchFreshData() {
+    const [matches, roundOf32Schedule, thirdPlaceRules] = await Promise.all([
+      fetchFreshMatches(),
+      fetchRoundOf32Schedule(),
+      fetchThirdPlaceRules(),
+    ]);
+    return {
+      generatedAt: new Date().toISOString(),
+      sources: {
+        scores: ESPN_SCOREBOARD,
+        thirdPlaceRules: THIRD_PLACE_TEMPLATE,
+      },
+      matches,
+      roundOf32Schedule,
+      thirdPlaceRules,
+    };
+  }
+
+  async function refreshFromLiveSources() {
+    const freshData = await fetchFreshData();
+    data = freshData;
+    saveCachedData(freshData);
+    renderAll("Live data");
+    scheduleNextRefresh();
+  }
+
+  function nextRefreshDelay() {
+    if (data.matches.some((match) => match.status.state === "in")) return ACTIVE_REFRESH_MS;
+
+    const now = Date.now();
+    const nextKickoff = data.matches
+      .filter((match) => !match.status.completed && new Date(match.date).getTime() >= now - 30 * 60 * 1000)
+      .map((match) => new Date(match.date).getTime())
+      .sort((a, b) => a - b)[0];
+
+    if (nextKickoff && nextKickoff - now <= 60 * 60 * 1000) return PRE_MATCH_REFRESH_MS;
+    return IDLE_REFRESH_MS;
+  }
+
+  function scheduleNextRefresh() {
+    clearTimeout(refreshTimer);
+    refreshTimer = setTimeout(() => {
+      refreshFromLiveSources().catch((error) => {
+        console.warn("Live data refresh failed", error);
+        scheduleNextRefresh();
+      });
+    }, nextRefreshDelay());
   }
 
   function escapeHtml(value) {
@@ -316,6 +489,7 @@
   }
 
   function teamName(team) {
+    if (!team) return `<span class="teamName"><span>TBD</span></span>`;
     return `<span class="teamName"><img src="${escapeHtml(team.logo)}" alt=""><span>${escapeHtml(team.shortName)}</span></span>`;
   }
 
@@ -461,11 +635,21 @@
   }
 
   function renderAll(sourceLabel = "Snapshot") {
+    if (!data.matches.length || !data.thirdPlaceRules.length) {
+      document.getElementById("snapshot").textContent = "Loading live World Cup data...";
+      document.getElementById("finalCount").textContent = "0";
+      document.getElementById("liveCount").textContent = "0";
+      document.getElementById("projectedCount").textContent = "0";
+      document.getElementById("groupsView").innerHTML = `<section class="groupCard"><div class="groupHeader"><h2>Loading live data</h2><span>ESPN + FIFA rules</span></div></section>`;
+      document.getElementById("knockoutView").innerHTML = `<section class="bracketCanvas"><div class="bracketHeader"><h2>Loading live data</h2><span>Bracket will render shortly</span></div></section>`;
+      return;
+    }
+
     const latest = data.matches
       .filter((match) => match.status.state === "in" || match.status.completed)
       .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
     document.getElementById("snapshot").textContent =
-      `${sourceLabel}: ${new Date(data.generatedAt).toLocaleString()} · Last active match: ${latest?.name ?? "none"}`;
+      `${sourceLabel}: ${new Date(data.generatedAt).toLocaleString()} · Last active match: ${latest?.name ?? "none"} · Next refresh: ${Math.round(nextRefreshDelay() / 60000)} min`;
     document.getElementById("finalCount").textContent = data.matches.filter((match) => match.status.completed).length;
     document.getElementById("liveCount").textContent = data.matches.filter((match) => match.status.state === "in").length;
     document.getElementById("projectedCount").textContent = data.matches.filter((match) => !match.status.completed && match.status.state !== "in").length;
@@ -473,12 +657,12 @@
     renderKnockout();
   }
 
-  renderAll();
+  renderAll(data.matches.length ? "Cached data" : "Loading");
   document.querySelectorAll("[data-view]").forEach((button) => {
     button.addEventListener("click", () => setView(button.dataset.view));
   });
-  refreshFromEspn().catch((error) => console.warn("Live ESPN refresh failed", error));
-  setInterval(() => {
-    refreshFromEspn().catch((error) => console.warn("Live ESPN refresh failed", error));
-  }, 120000);
+  refreshFromLiveSources().catch((error) => {
+    console.warn("Initial live data refresh failed", error);
+    scheduleNextRefresh();
+  });
 })();
