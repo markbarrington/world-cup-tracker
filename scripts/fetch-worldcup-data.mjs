@@ -28,6 +28,29 @@ const roundOf32SlotMap = {
   "1K-3RD": 87,
   "2D-2G": 88,
 };
+const hostSlotAliases = {
+  CAN: "1B",
+  MEX: "1A",
+  USA: "1D",
+};
+const roundOf32EventIdMap = {
+  760486: 73,
+  760489: 74,
+  760488: 75,
+  760487: 76,
+  760492: 77,
+  760490: 78,
+  760491: 79,
+  760495: 80,
+  760494: 81,
+  760493: 82,
+  760496: 83,
+  760497: 84,
+  760498: 85,
+  760500: 86,
+  760501: 87,
+  760499: 88,
+};
 
 function ymd(date) {
   return date.toISOString().slice(0, 10).replaceAll("-", "");
@@ -155,9 +178,9 @@ async function fetchRoundOf32Schedule() {
       const slots = (competition?.competitors ?? [])
         .slice()
         .sort((a, b) => a.order - b.order)
-        .map((competitor) => competitor.team?.abbreviation);
+        .map((competitor) => hostSlotAliases[competitor.team?.abbreviation] ?? competitor.team?.abbreviation);
       const key = slots.join("-");
-      const matchNumber = roundOf32SlotMap[key];
+      const matchNumber = roundOf32SlotMap[key] ?? roundOf32EventIdMap[event.id];
       if (!matchNumber) return null;
 
       return {
