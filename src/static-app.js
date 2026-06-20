@@ -46,6 +46,23 @@
     return 0;
   }
 
+  function normalizedImpliedProbabilities(odds) {
+    const entries = Object.entries(odds?.implied || {}).filter(([, value]) => typeof value === "number");
+    const total = entries.reduce((sum, [, value]) => sum + value, 0);
+    if (!total) return {};
+    return Object.fromEntries(entries.map(([key, value]) => [key, value / total]));
+  }
+
+  function shouldProjectDraw(match) {
+    const probabilities = normalizedImpliedProbabilities(match.odds);
+    const draw = probabilities.draw || 0;
+    const favoriteSide = (probabilities.home || 0) >= (probabilities.away || 0) ? "home" : "away";
+    const favorite = probabilities[favoriteSide] || 0;
+    const spread = Math.abs(Number(match.odds?.spread?.home || 0));
+
+    return spread <= 0.5 && draw >= 0.28 && favorite - draw <= 0.12;
+  }
+
   function projectedScore(match) {
     const [home, away] = match.competitors;
     if (match.status.completed || match.status.state === "in") {
@@ -63,7 +80,7 @@
     const winGoals = spread >= 2.5 ? 3 : spread >= 1.5 ? 2 : 1;
     const loseGoals = total >= 3.5 && winGoals >= 2 ? 1 : 0;
 
-    if (favorite === "draw") {
+    if (favorite === "draw" || shouldProjectDraw(match)) {
       const goals = total >= 3.5 ? 2 : total <= 2 ? 0 : 1;
       return { home: goals, away: goals, source: "projected", label: "ML draw" };
     }
