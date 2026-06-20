@@ -36,6 +36,17 @@ const roundOf32 = [
   { id: 88, left: "2D", right: "2G" },
 ];
 
+const bracketPaths = [
+  { id: 1, label: "Round of 16 path 1", matches: [73, 74] },
+  { id: 2, label: "Round of 16 path 2", matches: [76, 78] },
+  { id: 5, label: "Round of 16 path 5", matches: [84, 83] },
+  { id: 6, label: "Round of 16 path 6", matches: [82, 81] },
+  { id: 3, label: "Round of 16 path 3", matches: [75, 77] },
+  { id: 4, label: "Round of 16 path 4", matches: [79, 80] },
+  { id: 7, label: "Round of 16 path 7", matches: [88, 87] },
+  { id: 8, label: "Round of 16 path 8", matches: [85, 86] },
+];
+
 const thirdPlaceMatchOrder = {
   74: "1E",
   77: "1I",
@@ -331,6 +342,7 @@ function BracketTeam({ slot, team }) {
 function KnockoutView() {
   const { thirdRanked, advancingThirds, rule, slots } = getQualifiers();
   const advancingKeys = new Set(advancingThirds.map((row) => row.group));
+  const matchesById = Object.fromEntries(roundOf32.map((match) => [match.id, match]));
 
   return (
     <div className="knockoutLayout">
@@ -358,34 +370,43 @@ function KnockoutView() {
       <section className="bracketCanvas">
         <div className="bracketHeader">
           <h2>Round of 32 projection</h2>
-          <span>Completed + live scores, then moneyline favorites</span>
+          <span>Grouped by FIFA bracket path</span>
         </div>
-        <div className="matchGrid">
-          {roundOf32.map((match) => {
-            const thirdSlot = thirdPlaceMatchOrder[match.id];
-            const rightSlot = thirdSlot ? rule?.assignments?.[thirdSlot] : match.right;
-            const schedule = data.roundOf32Schedule?.find((item) => item.matchNumber === match.id);
-            return (
-              <article className="bracketMatch" key={match.id}>
-                <div className="matchNo">Match {match.id}</div>
-                <BracketTeam slot={match.left} team={slots[match.left]} />
-                <BracketTeam slot={rightSlot} team={slots[rightSlot]} />
-                {schedule ? (
-                  <div className="matchMeta">
-                    <span>{formatBracketDate(schedule.date)}</span>
-                    <span>{schedule.venue}{schedule.city ? ` · ${schedule.city}` : ""}</span>
-                  </div>
-                ) : null}
-                {thirdSlot ? (
-                  <div className="ruleTag">
-                    {thirdPlaceSlots[thirdSlot]} gets {rightSlot} by option {rule?.option}
-                  </div>
-                ) : (
-                  <div className="ruleTag direct">Fixed runner-up pairing</div>
-                )}
-              </article>
-            );
-          })}
+        <div className="pathGrid">
+          {bracketPaths.map((path) => (
+            <section className="pathGroup" key={path.id}>
+              <div className="pathHeader">
+                <span>{path.label}</span>
+                <small>Winners meet next</small>
+              </div>
+              {path.matches.map((matchId) => {
+                const match = matchesById[matchId];
+                const thirdSlot = thirdPlaceMatchOrder[match.id];
+                const rightSlot = thirdSlot ? rule?.assignments?.[thirdSlot] : match.right;
+                const schedule = data.roundOf32Schedule?.find((item) => item.matchNumber === match.id);
+                return (
+                  <article className="bracketMatch" key={match.id}>
+                    <div className="matchNo">Match {match.id}</div>
+                    <BracketTeam slot={match.left} team={slots[match.left]} />
+                    <BracketTeam slot={rightSlot} team={slots[rightSlot]} />
+                    {schedule ? (
+                      <div className="matchMeta">
+                        <span>{formatBracketDate(schedule.date)}</span>
+                        <span>{schedule.venue}{schedule.city ? ` · ${schedule.city}` : ""}</span>
+                      </div>
+                    ) : null}
+                    {thirdSlot ? (
+                      <div className="ruleTag">
+                        {thirdPlaceSlots[thirdSlot]} gets {rightSlot} by option {rule?.option}
+                      </div>
+                    ) : (
+                      <div className="ruleTag direct">Fixed runner-up pairing</div>
+                    )}
+                  </article>
+                );
+              })}
+            </section>
+          ))}
         </div>
       </section>
     </div>

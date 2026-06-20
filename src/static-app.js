@@ -32,6 +32,16 @@
     { id: 87, left: "1K", right: "3?" },
     { id: 88, left: "2D", right: "2G" },
   ];
+  const bracketPaths = [
+    { id: 1, label: "Round of 16 path 1", matches: [73, 74] },
+    { id: 2, label: "Round of 16 path 2", matches: [76, 78] },
+    { id: 5, label: "Round of 16 path 5", matches: [84, 83] },
+    { id: 6, label: "Round of 16 path 6", matches: [82, 81] },
+    { id: 3, label: "Round of 16 path 3", matches: [75, 77] },
+    { id: 4, label: "Round of 16 path 4", matches: [79, 80] },
+    { id: 7, label: "Round of 16 path 7", matches: [88, 87] },
+    { id: 8, label: "Round of 16 path 8", matches: [85, 86] },
+  ];
 
   function ymd(date) {
     return date.toISOString().slice(0, 10).replaceAll("-", "");
@@ -396,6 +406,7 @@
   function renderKnockout() {
     const { thirdRanked, advancingThirds, rule, slots } = getQualifiers();
     const advancingKeys = new Set(advancingThirds.map((row) => row.group));
+    const matchesById = Object.fromEntries(roundOf32.map((match) => [match.id, match]));
     document.getElementById("knockoutView").innerHTML = `
       <aside class="thirdPanel">
         <div class="panelTitle"><h2>Third-place cut</h2><span>Top 8 projected</span></div>
@@ -409,27 +420,33 @@
         <div class="ruleNote"><strong>Annex C option ${rule ? rule.option : "n/a"}</strong><span>${advancingThirds.map((row) => row.group).join(", ")} advance.</span></div>
       </aside>
       <section class="bracketCanvas">
-        <div class="bracketHeader"><h2>Round of 32 projection</h2><span>Completed + live scores, then moneyline favorites</span></div>
-        <div class="matchGrid">
-          ${roundOf32.map((match) => {
-            const thirdSlot = thirdPlaceMatchOrder[match.id];
-            const rightSlot = thirdSlot ? rule?.assignments?.[thirdSlot] : match.right;
-            const schedule = data.roundOf32Schedule?.find((item) => item.matchNumber === match.id);
-            return `
-              <article class="bracketMatch">
-                <div class="matchNo">Match ${match.id}</div>
-                ${bracketTeam(match.left, slots[match.left])}
-                ${bracketTeam(rightSlot, slots[rightSlot])}
-                ${schedule ? `
-                  <div class="matchMeta">
-                    <span>${formatBracketDate(schedule.date)}</span>
-                    <span>${escapeHtml(schedule.venue)}${schedule.city ? ` · ${escapeHtml(schedule.city)}` : ""}</span>
-                  </div>
-                ` : ""}
-                <div class="ruleTag">${thirdSlot ? `Winner Group ${thirdSlot.slice(1)} gets ${rightSlot} by option ${rule.option}` : "Fixed runner-up pairing"}</div>
-              </article>
-            `;
-          }).join("")}
+        <div class="bracketHeader"><h2>Round of 32 projection</h2><span>Grouped by FIFA bracket path</span></div>
+        <div class="pathGrid">
+          ${bracketPaths.map((path) => `
+            <section class="pathGroup">
+              <div class="pathHeader"><span>${path.label}</span><small>Winners meet next</small></div>
+              ${path.matches.map((matchId) => {
+                const match = matchesById[matchId];
+                const thirdSlot = thirdPlaceMatchOrder[match.id];
+                const rightSlot = thirdSlot ? rule?.assignments?.[thirdSlot] : match.right;
+                const schedule = data.roundOf32Schedule?.find((item) => item.matchNumber === match.id);
+                return `
+                  <article class="bracketMatch">
+                    <div class="matchNo">Match ${match.id}</div>
+                    ${bracketTeam(match.left, slots[match.left])}
+                    ${bracketTeam(rightSlot, slots[rightSlot])}
+                    ${schedule ? `
+                      <div class="matchMeta">
+                        <span>${formatBracketDate(schedule.date)}</span>
+                        <span>${escapeHtml(schedule.venue)}${schedule.city ? ` · ${escapeHtml(schedule.city)}` : ""}</span>
+                      </div>
+                    ` : ""}
+                    <div class="ruleTag">${thirdSlot ? `Winner Group ${thirdSlot.slice(1)} gets ${rightSlot} by option ${rule.option}` : "Fixed runner-up pairing"}</div>
+                  </article>
+                `;
+              }).join("")}
+            </section>
+          `).join("")}
         </div>
       </section>
     `;
