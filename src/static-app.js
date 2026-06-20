@@ -10,6 +10,7 @@
   const roundOf32End = new Date("2026-07-04T00:00:00Z");
   const groups = "ABCDEFGHIJKL".split("");
   let refreshTimer = null;
+  let qualificationAnalysis = emptyQualificationAnalysis();
   let data = loadCachedData() || {
     generatedAt: null,
     sources: {
@@ -357,6 +358,214 @@
     };
   }
 
+  function emptyQualificationAnalysis() {
+    return { teams: {}, slots: {} };
+  }
+
+  function matchOutcome(match, outcome) {
+    const [home, away] = match.competitors;
+    if (match.status.completed) {
+      if (home.score > away.score) return "home";
+      if (home.score < away.score) return "away";
+      return "draw";
+    }
+    return outcome;
+  }
+
+  function outcomePoints(match, outcome, teamId) {
+    const result = matchOutcome(match, outcome);
+    const [home, away] = match.competitors;
+    if (result === "draw") return 1;
+    if (result === "home") return home.id === teamId ? 3 : 0;
+    return away.id === teamId ? 3 : 0;
+  }
+
+  function enumerateOutcomePatterns(matches, index = 0, current = {}, patterns = []) {
+    if (index >= matches.length) {
+      patterns.push({ ...current });
+      return patterns;
+    }
+
+    const match = matches[index];
+    if (match.status.completed) {
+      return enumerateOutcomePatterns(matches, index + 1, current, patterns);
+    }
+
+    ["home", "draw", "away"].forEach((outcome) => {
+      current[match.id] = outcome;
+      enumerateOutcomePatterns(matches, index + 1, current, patterns);
+      delete current[match.id];
+    });
+
+    return patterns;
+  }
+
+  function h2hPointsFor(teamId, tiedIds, matches, outcomes) {
+    return matches.reduce((total, match) => {
+      const [home, away] = match.competitors;
+      if (!tiedIds.includes(home.id) || !tiedIds.includes(away.id)) return total;
+      return total + outcomePoints(match, outcomes[match.id], teamId);
+    }, 0);
+  }
+
+  function rankTiersFromScenario(rows, matches, outcomes) {
+    const byPoints = new Map();
+    rows.forEach((row) => byPoints.set(row.points, [...(byPoints.get(row.points) || []), row]));
+
+    return [...byPoints.entries()]
+      .sort((a, b) => b[0] - a[0])
+      .flatMap(([, pointRows]) => {
+        if (pointRows.length === 1) return [pointRows];
+
+        const tiedIds = pointRows.map((row) => row.id);
+        const byH2hPoints = new Map();
+        pointRows.forEach((row) => {
+          const h2hPoints = h2hPointsFor(row.id, tiedIds, matches, outcomes);
+          byH2hPoints.set(h2hPoints, [...(byH2hPoints.get(h2hPoints) || []), row]);
+        });
+
+        return [...byH2hPoints.entries()]
+          .sort((a, b) => b[0] - a[0])
+          .map(([, h2hRows]) => h2hRows);
+      });
+  }
+
+  function ranksForScenario(rows, matches, outcomes) {
+    const rankSets = Object.fromEntries(rows.map((row) => [row.id, new Set()]));
+    let rankCursor = 1;
+
+    rankTiersFromScenario(rows, matches, outcomes).forEach((tier) => {
+      const possibleRanks = Array.from({ length: tier.length }, (_, index) => rankCursor + index);
+      tier.forEach((row) => possibleRanks.forEach((rank) => rankSets[row.id].add(rank)));
+      rankCursor += tier.length;
+    });
+
+    return rankSets;
+  }
+
+  function rowsForOutcome(matches, outcomes) {
+    const rowsById = new Map();
+    matches.forEach((match) => {
+      match.competitors.forEach((team) => {
+        rowsById.set(team.id, rowsById.get(team.id) || { ...team, points: 0 });
+      });
+    });
+
+    matches.forEach((match) => {
+      match.competitors.forEach((team) => {
+        rowsById.get(team.id).points += outcomePoints(match, outcomes[match.id], team.id);
+      });
+    });
+
+    return [...rowsById.values()];
+  }
+
+  function analyzeGroupPossibilities(group) {
+    const matches = data.matches.filter((match) => match.group === group);
+    const teams = new Map();
+    matches.forEach((match) => match.competitors.forEach((team) => teams.set(team.id, team)));
+
+    const possibleRanks = Object.fromEntries([...teams.keys()].map((teamId) => [teamId, new Set()]));
+    const thirdOutcomes = [];
+
+    enumerateOutcomePatterns(matches).forEach((outcomes) => {
+      const rows = rowsForOutcome(matches, outcomes);
+      const scenarioRanks = ranksForScenario(rows, matches, outcomes);
+      rows.forEach((row) => {
+        scenarioRanks[row.id].forEach((rank) => possibleRanks[row.id].add(rank));
+        if (scenarioRanks[row.id].has(3)) {
+          thirdOutcomes.push({
+            group,
+            teamId: row.id,
+            team: teams.get(row.id),
+            points: row.points,
+          });
+        }
+      });
+    });
+
+    return {
+      group,
+      teams,
+      possibleRanks,
+      thirdOutcomes,
+      minThirdPoints: thirdOutcomes.length
+        ? Math.min(...thirdOutcomes.map((outcome) => outcome.points))
+        : Number.POSITIVE_INFINITY,
+    };
+  }
+
+  function canQualifyViaThirdPlace(teamId, group, groupAnalyses) {
+    const targetOutcomes = groupAnalyses[group].thirdOutcomes.filter((outcome) => outcome.teamId === teamId);
+    if (!targetOutcomes.length) return false;
+
+    return targetOutcomes.some((targetOutcome) => {
+      const forcedAhead = groups
+        .filter((otherGroup) => otherGroup !== group)
+        .filter((otherGroup) => groupAnalyses[otherGroup].minThirdPoints > targetOutcome.points)
+        .length;
+
+      return forcedAhead < 8;
+    });
+  }
+
+  function labelForQualificationStatus(status) {
+    if (status === "locked-first") return "Locked 1st";
+    if (status === "locked-second") return "Locked 2nd";
+    if (status === "eliminated") return "Eliminated";
+    return "";
+  }
+
+  function analyzeQualificationLocks() {
+    if (!data.matches.length) return emptyQualificationAnalysis();
+
+    const groupAnalyses = Object.fromEntries(groups.map((group) => [group, analyzeGroupPossibilities(group)]));
+    const teams = {};
+    const slots = {};
+
+    groups.forEach((group) => {
+      const analysis = groupAnalyses[group];
+      analysis.teams.forEach((team, teamId) => {
+        const possibleGroupRanks = [...analysis.possibleRanks[teamId]].sort((a, b) => a - b);
+        const rankKey = possibleGroupRanks.join(",");
+        const directImpossible = !possibleGroupRanks.some((rank) => rank <= 2);
+        const thirdPlacePossible = canQualifyViaThirdPlace(teamId, group, groupAnalyses);
+        let finalStatus = "open";
+        let lockedSlot = null;
+
+        if (rankKey === "1") {
+          finalStatus = "locked-first";
+          lockedSlot = `1${group}`;
+        } else if (rankKey === "2") {
+          finalStatus = "locked-second";
+          lockedSlot = `2${group}`;
+        } else if (directImpossible && !thirdPlacePossible) {
+          finalStatus = "eliminated";
+        }
+
+        const entry = {
+          group,
+          team,
+          possibleGroupRanks,
+          possibleSlots: possibleGroupRanks.map((rank) => `${rank}${group}`),
+          lockedSlot,
+          directQualification:
+            finalStatus === "locked-first" || finalStatus === "locked-second"
+              ? finalStatus
+              : directImpossible ? "impossible" : "possible",
+          thirdPlaceQualification: thirdPlacePossible ? "possible" : "impossible",
+          finalStatus,
+          label: labelForQualificationStatus(finalStatus),
+        };
+
+        teams[teamId] = entry;
+        if (lockedSlot) slots[lockedSlot] = entry;
+      });
+    });
+
+    return { teams, slots };
+  }
+
   function headToHeadStats(teamId, tiedIds, matches, mode) {
     const stats = { points: 0, gd: 0, gf: 0 };
     matches.forEach((match) => {
@@ -455,6 +664,11 @@
     return `<span class="teamName"><img src="${escapeHtml(team.logo)}" alt=""><span>${escapeHtml(team.shortName)}</span></span>`;
   }
 
+  function qualificationBadge(qualification) {
+    if (!qualification?.label) return "";
+    return `<span class="qualificationBadge ${escapeHtml(qualification.finalStatus)}">${escapeHtml(qualification.label)}</span>`;
+  }
+
   function slotDescription(slot) {
     if (!slot) return "";
     const position = slot[0];
@@ -479,8 +693,8 @@
             <thead><tr><th>Team</th><th>P</th><th>GD</th><th>Pts</th></tr></thead>
             <tbody>
               ${rows.map((team, index) => `
-                <tr>
-                  <td><span class="rank">${index + 1}</span>${teamName(team)}</td>
+                <tr class="qualificationRow ${escapeHtml(qualificationAnalysis.teams[team.id]?.finalStatus || "open")}">
+                  <td><span class="rank">${index + 1}</span>${teamName(team)}${qualificationBadge(qualificationAnalysis.teams[team.id])}</td>
                   <td>${team.played}</td>
                   <td>${team.gd > 0 ? `+${team.gd}` : team.gd}</td>
                   <td class="pts">${team.points}</td>
@@ -528,12 +742,20 @@
   }
 
   function bracketTeam(slot, team) {
+    const locked = qualificationAnalysis.slots[slot];
+    const projectedStatus = team ? qualificationAnalysis.teams[team.id] : null;
+    const displayTeam = locked?.team || (projectedStatus?.finalStatus === "eliminated" ? null : team);
+    const className = locked ? "bracketTeam lockedSlot" : "bracketTeam";
+    const description = locked
+      ? `Locked Group ${locked.group} ${locked.finalStatus === "locked-first" ? "winner" : "runner-up"}`
+      : slotDescription(slot);
+
     return `
-      <div class="bracketTeam">
+      <div class="${className}">
         <span class="slot">${escapeHtml(slot)}</span>
         <span class="bracketTeamText">
-          ${teamName(team)}
-          <small>${escapeHtml(slotDescription(slot))}</small>
+          ${teamName(displayTeam)}
+          <small>${escapeHtml(description)}</small>
         </span>
       </div>
     `;
@@ -615,6 +837,7 @@
     document.getElementById("finalCount").textContent = data.matches.filter((match) => match.status.completed).length;
     document.getElementById("liveCount").textContent = data.matches.filter((match) => match.status.state === "in").length;
     document.getElementById("projectedCount").textContent = data.matches.filter((match) => !match.status.completed && match.status.state !== "in").length;
+    qualificationAnalysis = analyzeQualificationLocks();
     renderGroups();
     renderKnockout();
   }
