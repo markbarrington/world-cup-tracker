@@ -183,6 +183,16 @@
     return `<span class="teamName"><img src="${escapeHtml(team.logo)}" alt=""><span>${escapeHtml(team.shortName)}</span></span>`;
   }
 
+  function slotDescription(slot) {
+    if (!slot) return "";
+    const position = slot[0];
+    const group = slot.slice(1);
+    if (position === "1") return `Group ${group} winner`;
+    if (position === "2") return `Group ${group} runner-up`;
+    if (position === "3") return `Group ${group} third place`;
+    return slot;
+  }
+
   function renderGroups() {
     document.getElementById("groupsView").innerHTML = groups.map((group) => {
       const rows = tableForGroup(group, "current");
@@ -246,7 +256,15 @@
   }
 
   function bracketTeam(slot, team) {
-    return `<div class="bracketTeam"><span class="slot">${escapeHtml(slot)}</span>${teamName(team)}</div>`;
+    return `
+      <div class="bracketTeam">
+        <span class="slot">${escapeHtml(slot)}</span>
+        <span class="bracketTeamText">
+          ${teamName(team)}
+          <small>${escapeHtml(slotDescription(slot))}</small>
+        </span>
+      </div>
+    `;
   }
 
   function renderKnockout() {

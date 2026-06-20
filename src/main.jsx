@@ -235,6 +235,16 @@ function TeamName({ team }) {
   );
 }
 
+function slotDescription(slot) {
+  if (!slot) return "";
+  const position = slot[0];
+  const group = slot.slice(1);
+  if (position === "1") return `Group ${group} winner`;
+  if (position === "2") return `Group ${group} runner-up`;
+  if (position === "3") return `Group ${group} third place`;
+  return slot;
+}
+
 function GroupCard({ group }) {
   const rows = tableForGroup(group, "current");
   const matches = data.matches.filter((match) => match.group === group);
@@ -293,7 +303,10 @@ function BracketTeam({ slot, team }) {
   return (
     <div className="bracketTeam">
       <span className="slot">{slot}</span>
-      <TeamName team={team} />
+      <span className="bracketTeamText">
+        <TeamName team={team} />
+        <small>{slotDescription(slot)}</small>
+      </span>
     </div>
   );
 }
