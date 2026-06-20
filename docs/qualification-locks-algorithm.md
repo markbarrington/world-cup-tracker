@@ -16,11 +16,14 @@ Each team row can expose one of these statuses:
 - `Locked 1st`: every possible remaining result leaves the team first in its group.
 - `Locked 2nd`: every possible remaining result leaves the team second in its group.
 - `Eliminated`: no possible remaining result puts the team into the Round of 32.
+- `Live lock 1st`, `Live lock 2nd`, or `Live eliminated`: the state would be locked if all currently live scores finished as they stand.
 - no badge: the team is still in contention and not mathematically locked.
 
 Do not show `Locked 3rd` or a generic `Qualified` badge. If a team is guaranteed to qualify but could still finish in more than one position, show no badge.
 
 Only show a badge when the proof is conservative and certain. If future score-margin tiebreakers make the result ambiguous, do not show a lock.
+
+Live-contingent badges are not final locks. They should use different wording and styling so a user understands the state can disappear when the live score changes.
 
 ## Definitions
 
@@ -47,6 +50,8 @@ For each unplayed or live group match, enumerate the three possible result class
 Completed matches use their actual score.
 
 Live matches should be treated as not final until ESPN marks them completed. A live score is useful for display, but it is not a mathematical lock unless the match is final.
+
+For live-contingent display, run a separate pass that treats live matches as frozen at their current score and keeps unplayed matches as W/D/L enumerations. That pass answers "what would be locked if the live score held?" without weakening the final-only proof.
 
 ## Tiebreaker Conservatism
 
@@ -107,6 +112,44 @@ After evaluating every possible final state for a group:
 This catches cases like a team that must finish top regardless of all remaining results.
 
 Do not add a generic `Qualified` badge for a team whose possible ranks are `{1, 2}`. That team is guaranteed to qualify, but it is not locked into one of the two displayed positions.
+
+## Live-Contingent Locks
+
+Live-contingent locks should be calculated by reusing the same proof engine with one parameter:
+
+```js
+analyzeQualificationLocks({ liveMode: "final-only" });
+analyzeQualificationLocks({ liveMode: "current-score" });
+```
+
+The modes differ only in how they treat live matches:
+
+- `final-only`: live matches are still enumerated as home win, draw, or away win.
+- `current-score`: live matches are treated like completed matches using the current ESPN score.
+
+Unplayed matches remain enumerated as home win, draw, or away win in both modes.
+
+The UI should prefer final locks over live-contingent locks:
+
+1. If final-only status is `locked-first`, show `Locked 1st`.
+2. If final-only status is `locked-second`, show `Locked 2nd`.
+3. If final-only status is `eliminated`, show `Eliminated`.
+4. Otherwise, if current-score status is `locked-first`, show `Live lock 1st`.
+5. Otherwise, if current-score status is `locked-second`, show `Live lock 2nd`.
+6. Otherwise, if current-score status is `eliminated`, show `Live eliminated`.
+7. Otherwise, show no badge.
+
+This keeps permanent certainty and live drama visible at the same time without conflating them.
+
+Example:
+
+```text
+Team A is not yet locked because a live match is still in progress.
+At the current score, Team A would be locked first.
+Show: Live lock 1st
+```
+
+If the live score changes and Team A is no longer locked in the current-score pass, remove the live badge on the next refresh.
 
 ## Elimination From Top Two
 
@@ -186,6 +229,23 @@ The top-level result should be keyed by team id:
 }
 ```
 
+For live display, keep both analyses available:
+
+```js
+{
+  final: analyzeQualificationLocks({ liveMode: "final-only" }),
+  currentScore: analyzeQualificationLocks({ liveMode: "current-score" }),
+  display: {
+    [teamId]: {
+      finalStatus: "locked-first" | "locked-second" | "eliminated" | "open",
+      liveStatus: "locked-first" | "locked-second" | "eliminated" | "open",
+      displayStatus: "locked-first" | "locked-second" | "eliminated" | "live-locked-first" | "live-locked-second" | "live-eliminated" | "open",
+      label: "Live lock 1st"
+    }
+  }
+}
+```
+
 ## Integration With Current App
 
 The active app is `src/static-app.js`. The qualification proof should use the same `data.matches` payload as:
@@ -213,6 +273,7 @@ Recommended treatment:
 
 - Locked first and locked second rows get a bounded highlight around the team row.
 - Eliminated rows are visually muted and grayed out.
+- Live-contingent rows get a temporary/pulsing or dashed highlight and a `Live` badge.
 - Open rows keep the existing styling.
 
 Suggested markup:
@@ -241,6 +302,8 @@ Styling intent:
 
 - `locked-first` and `locked-second`: use a clear outline or inset border around the full row, with a restrained accent color and a small `Locked 1st` or `Locked 2nd` badge.
 - `eliminated`: reduce text contrast, desaturate the crest if practical, and use an `Eliminated` badge with a neutral gray treatment.
+- `live-locked-first` and `live-locked-second`: use a dashed or subtly animated border, a warmer live accent, and badge text like `Live lock 1st`.
+- `live-eliminated`: use muted row styling, but lighter than final elimination, with badge text `Live eliminated`.
 - Avoid changing row height significantly. The standings table should not jump when badges appear after refresh.
 
 Table rows can be awkward to outline consistently across browsers. If direct `tr` outlines are unreliable, apply the border treatment to each cell:
@@ -268,7 +331,7 @@ Table rows can be awkward to outline consistently across browsers. If direct `tr
 
 Locked first and second teams should also appear as locked facts on the Knockout page.
 
-The existing bracket can continue to render projected slots for every Round of 32 match. The change is that any team with `finalStatus` of `locked-first` or `locked-second` should be styled as a confirmed slot rather than an odds projection.
+The existing bracket can continue to render projected slots for every Round of 32 match. The change is that any team with final or live-contingent first/second status should be styled differently from an odds projection.
 
 Example:
 
@@ -288,9 +351,11 @@ const lockedSlotsByName = {
 When rendering a bracket team:
 
 1. Resolve the slot normally.
-2. Check whether `locksBySlot[slot]` exists.
+2. Check whether `final.locksBySlot[slot]` exists.
 3. If it exists, render that locked team and add a `lockedSlot` class.
-4. If it does not exist, render the existing projected team and keep the projected styling.
+4. Otherwise check whether `currentScore.locksBySlot[slot]` exists.
+5. If it exists, render that team and add a `liveLockedSlot` class.
+6. If neither exists, render the existing projected team and keep the projected styling.
 
 Suggested bracket markup:
 
@@ -300,6 +365,18 @@ Suggested bracket markup:
   <span class="bracketTeamText">
     <span class="teamName">USA</span>
     <small>Locked Group A winner</small>
+  </span>
+</div>
+```
+
+Suggested live-contingent bracket markup:
+
+```html
+<div class="bracketTeam liveLockedSlot">
+  <span class="slot">1A</span>
+  <span class="bracketTeamText">
+    <span class="teamName">USA</span>
+    <small>Live: would be Group A winner</small>
   </span>
 </div>
 ```
@@ -321,6 +398,10 @@ Add targeted fixture tests before wiring the UI:
 7. A locked first-place team appears in the correct Round of 32 bracket slot with locked styling.
 8. A locked second-place team appears in the correct Round of 32 bracket slot with locked styling.
 9. An eliminated team is grayed out on the Groups page and does not appear as a locked bracket team.
+10. A live score creates `Live lock 1st` while the final-only pass remains open.
+11. A live score creates `Live eliminated` while the final-only pass remains open.
+12. A final lock always overrides a live-contingent lock for the same team and slot.
+13. Changing the live score removes stale live-contingent badges on the next refresh.
 
 The tests should verify labels, not just raw rank sets.
 
@@ -332,7 +413,9 @@ The tests should verify labels, not just raw rank sets.
 4. Add third-place elimination proof.
 5. Render bounded locked rows and grayed eliminated rows in `renderGroups()`.
 6. Add locked-slot styling to `renderKnockout()`.
-7. Run `npm run prepare:pages` and a browser smoke check against `site/`.
+7. Add a current-score live-contingent pass.
+8. Render live-contingent row and bracket states with separate labels and styling.
+9. Run `npm run prepare:pages` and a browser smoke check against `site/`.
 
 ## Non-Goals
 
@@ -340,3 +423,4 @@ The tests should verify labels, not just raw rank sets.
 - Do not make odds part of qualification certainty.
 - Do not call FIFA, Wikipedia, or ESPN more often.
 - Do not claim certainty based on fixture simulations with arbitrary scorelines.
+- Do not label live-contingent states as final locks.

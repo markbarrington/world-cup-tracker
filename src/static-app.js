@@ -359,12 +359,21 @@
   }
 
   function emptyQualificationAnalysis() {
-    return { teams: {}, slots: {} };
+    return {
+      final: { teams: {}, slots: {} },
+      currentScore: { teams: {}, slots: {} },
+      teams: {},
+      slots: {},
+    };
   }
 
-  function matchOutcome(match, outcome) {
+  function fixedOutcome(match, liveMode) {
+    return match.status.completed || (liveMode === "current-score" && match.status.state === "in");
+  }
+
+  function matchOutcome(match, outcome, liveMode) {
     const [home, away] = match.competitors;
-    if (match.status.completed) {
+    if (fixedOutcome(match, liveMode)) {
       if (home.score > away.score) return "home";
       if (home.score < away.score) return "away";
       return "draw";
@@ -372,43 +381,43 @@
     return outcome;
   }
 
-  function outcomePoints(match, outcome, teamId) {
-    const result = matchOutcome(match, outcome);
+  function outcomePoints(match, outcome, teamId, liveMode) {
+    const result = matchOutcome(match, outcome, liveMode);
     const [home, away] = match.competitors;
     if (result === "draw") return 1;
     if (result === "home") return home.id === teamId ? 3 : 0;
     return away.id === teamId ? 3 : 0;
   }
 
-  function enumerateOutcomePatterns(matches, index = 0, current = {}, patterns = []) {
+  function enumerateOutcomePatterns(matches, liveMode, index = 0, current = {}, patterns = []) {
     if (index >= matches.length) {
       patterns.push({ ...current });
       return patterns;
     }
 
     const match = matches[index];
-    if (match.status.completed) {
-      return enumerateOutcomePatterns(matches, index + 1, current, patterns);
+    if (fixedOutcome(match, liveMode)) {
+      return enumerateOutcomePatterns(matches, liveMode, index + 1, current, patterns);
     }
 
     ["home", "draw", "away"].forEach((outcome) => {
       current[match.id] = outcome;
-      enumerateOutcomePatterns(matches, index + 1, current, patterns);
+      enumerateOutcomePatterns(matches, liveMode, index + 1, current, patterns);
       delete current[match.id];
     });
 
     return patterns;
   }
 
-  function h2hPointsFor(teamId, tiedIds, matches, outcomes) {
+  function h2hPointsFor(teamId, tiedIds, matches, outcomes, liveMode) {
     return matches.reduce((total, match) => {
       const [home, away] = match.competitors;
       if (!tiedIds.includes(home.id) || !tiedIds.includes(away.id)) return total;
-      return total + outcomePoints(match, outcomes[match.id], teamId);
+      return total + outcomePoints(match, outcomes[match.id], teamId, liveMode);
     }, 0);
   }
 
-  function rankTiersFromScenario(rows, matches, outcomes) {
+  function rankTiersFromScenario(rows, matches, outcomes, liveMode) {
     const byPoints = new Map();
     rows.forEach((row) => byPoints.set(row.points, [...(byPoints.get(row.points) || []), row]));
 
@@ -420,7 +429,7 @@
         const tiedIds = pointRows.map((row) => row.id);
         const byH2hPoints = new Map();
         pointRows.forEach((row) => {
-          const h2hPoints = h2hPointsFor(row.id, tiedIds, matches, outcomes);
+          const h2hPoints = h2hPointsFor(row.id, tiedIds, matches, outcomes, liveMode);
           byH2hPoints.set(h2hPoints, [...(byH2hPoints.get(h2hPoints) || []), row]);
         });
 
@@ -430,11 +439,11 @@
       });
   }
 
-  function ranksForScenario(rows, matches, outcomes) {
+  function ranksForScenario(rows, matches, outcomes, liveMode) {
     const rankSets = Object.fromEntries(rows.map((row) => [row.id, new Set()]));
     let rankCursor = 1;
 
-    rankTiersFromScenario(rows, matches, outcomes).forEach((tier) => {
+    rankTiersFromScenario(rows, matches, outcomes, liveMode).forEach((tier) => {
       const possibleRanks = Array.from({ length: tier.length }, (_, index) => rankCursor + index);
       tier.forEach((row) => possibleRanks.forEach((rank) => rankSets[row.id].add(rank)));
       rankCursor += tier.length;
@@ -443,7 +452,7 @@
     return rankSets;
   }
 
-  function rowsForOutcome(matches, outcomes) {
+  function rowsForOutcome(matches, outcomes, liveMode) {
     const rowsById = new Map();
     matches.forEach((match) => {
       match.competitors.forEach((team) => {
@@ -453,14 +462,14 @@
 
     matches.forEach((match) => {
       match.competitors.forEach((team) => {
-        rowsById.get(team.id).points += outcomePoints(match, outcomes[match.id], team.id);
+        rowsById.get(team.id).points += outcomePoints(match, outcomes[match.id], team.id, liveMode);
       });
     });
 
     return [...rowsById.values()];
   }
 
-  function analyzeGroupPossibilities(group) {
+  function analyzeGroupPossibilities(group, liveMode) {
     const matches = data.matches.filter((match) => match.group === group);
     const teams = new Map();
     matches.forEach((match) => match.competitors.forEach((team) => teams.set(team.id, team)));
@@ -468,9 +477,9 @@
     const possibleRanks = Object.fromEntries([...teams.keys()].map((teamId) => [teamId, new Set()]));
     const thirdOutcomes = [];
 
-    enumerateOutcomePatterns(matches).forEach((outcomes) => {
-      const rows = rowsForOutcome(matches, outcomes);
-      const scenarioRanks = ranksForScenario(rows, matches, outcomes);
+    enumerateOutcomePatterns(matches, liveMode).forEach((outcomes) => {
+      const rows = rowsForOutcome(matches, outcomes, liveMode);
+      const scenarioRanks = ranksForScenario(rows, matches, outcomes, liveMode);
       rows.forEach((row) => {
         scenarioRanks[row.id].forEach((rank) => possibleRanks[row.id].add(rank));
         if (scenarioRanks[row.id].has(3)) {
@@ -513,13 +522,23 @@
     if (status === "locked-first") return "Locked 1st";
     if (status === "locked-second") return "Locked 2nd";
     if (status === "eliminated") return "Eliminated";
+    if (status === "live-locked-first") return "Live lock 1st";
+    if (status === "live-locked-second") return "Live lock 2nd";
+    if (status === "live-eliminated") return "Live eliminated";
     return "";
   }
 
-  function analyzeQualificationLocks() {
-    if (!data.matches.length) return emptyQualificationAnalysis();
+  function liveDisplayStatus(status) {
+    if (status === "locked-first") return "live-locked-first";
+    if (status === "locked-second") return "live-locked-second";
+    if (status === "eliminated") return "live-eliminated";
+    return "open";
+  }
 
-    const groupAnalyses = Object.fromEntries(groups.map((group) => [group, analyzeGroupPossibilities(group)]));
+  function analyzeQualificationLocks({ liveMode = "final-only" } = {}) {
+    if (!data.matches.length) return { teams: {}, slots: {} };
+
+    const groupAnalyses = Object.fromEntries(groups.map((group) => [group, analyzeGroupPossibilities(group, liveMode)]));
     const teams = {};
     const slots = {};
 
@@ -564,6 +583,67 @@
     });
 
     return { teams, slots };
+  }
+
+  function combineQualificationAnalyses(finalAnalysis, currentScoreAnalysis) {
+    const teams = {};
+    const slots = {};
+    const teamIds = new Set([...Object.keys(finalAnalysis.teams), ...Object.keys(currentScoreAnalysis.teams)]);
+
+    teamIds.forEach((teamId) => {
+      const finalEntry = finalAnalysis.teams[teamId];
+      const currentScoreEntry = currentScoreAnalysis.teams[teamId];
+      const baseEntry = finalEntry || currentScoreEntry;
+      const finalStatus = finalEntry?.finalStatus || "open";
+      const liveStatus = currentScoreEntry?.finalStatus || "open";
+      let displayStatus = finalStatus;
+      let sourceEntry = finalEntry;
+
+      if (displayStatus === "open") {
+        displayStatus = liveDisplayStatus(liveStatus);
+        sourceEntry = currentScoreEntry || finalEntry;
+      }
+
+      teams[teamId] = {
+        ...baseEntry,
+        ...sourceEntry,
+        finalOnlyStatus: finalStatus,
+        liveStatus,
+        finalStatus: displayStatus,
+        label: labelForQualificationStatus(displayStatus),
+      };
+    });
+
+    Object.entries(finalAnalysis.slots).forEach(([slot, entry]) => {
+      slots[slot] = {
+        ...entry,
+        finalOnlyStatus: entry.finalStatus,
+        liveStatus: currentScoreAnalysis.slots[slot]?.finalStatus || "open",
+        label: labelForQualificationStatus(entry.finalStatus),
+      };
+    });
+
+    Object.entries(currentScoreAnalysis.slots).forEach(([slot, entry]) => {
+      if (slots[slot]) return;
+      const displayStatus = liveDisplayStatus(entry.finalStatus);
+      if (displayStatus === "open") return;
+      slots[slot] = {
+        ...entry,
+        finalOnlyStatus: "open",
+        liveStatus: entry.finalStatus,
+        finalStatus: displayStatus,
+        label: labelForQualificationStatus(displayStatus),
+      };
+    });
+
+    return { final: finalAnalysis, currentScore: currentScoreAnalysis, teams, slots };
+  }
+
+  function buildQualificationAnalysis() {
+    return combineQualificationAnalyses(
+      analyzeQualificationLocks({ liveMode: "final-only" }),
+      analyzeQualificationLocks({ liveMode: "current-score" }),
+    );
   }
 
   function headToHeadStats(teamId, tiedIds, matches, mode) {
@@ -745,9 +825,10 @@
     const locked = qualificationAnalysis.slots[slot];
     const projectedStatus = team ? qualificationAnalysis.teams[team.id] : null;
     const displayTeam = locked?.team || (projectedStatus?.finalStatus === "eliminated" ? null : team);
-    const className = locked ? "bracketTeam lockedSlot" : "bracketTeam";
+    const isLiveLocked = locked?.finalStatus?.startsWith("live-");
+    const className = locked ? `bracketTeam ${isLiveLocked ? "liveLockedSlot" : "lockedSlot"}` : "bracketTeam";
     const description = locked
-      ? `Locked Group ${locked.group} ${locked.finalStatus === "locked-first" ? "winner" : "runner-up"}`
+      ? `${isLiveLocked ? "Live: would be" : "Locked"} Group ${locked.group} ${locked.finalStatus.endsWith("first") ? "winner" : "runner-up"}`
       : slotDescription(slot);
 
     return `
@@ -837,7 +918,7 @@
     document.getElementById("finalCount").textContent = data.matches.filter((match) => match.status.completed).length;
     document.getElementById("liveCount").textContent = data.matches.filter((match) => match.status.state === "in").length;
     document.getElementById("projectedCount").textContent = data.matches.filter((match) => !match.status.completed && match.status.state !== "in").length;
-    qualificationAnalysis = analyzeQualificationLocks();
+    qualificationAnalysis = buildQualificationAnalysis();
     renderGroups();
     renderKnockout();
   }
