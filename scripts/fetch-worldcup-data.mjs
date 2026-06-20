@@ -17,7 +17,7 @@ const roundOf32SlotMap = {
   "1C-2F": 76,
   "1I-3RD": 77,
   "2E-2I": 78,
-  "MEX-3RD": 79,
+  "1A-3RD": 79,
   "1L-3RD": 80,
   "1D-3RD": 81,
   "1G-3RD": 82,
@@ -27,29 +27,6 @@ const roundOf32SlotMap = {
   "1J-2H": 86,
   "1K-3RD": 87,
   "2D-2G": 88,
-};
-const hostSlotAliases = {
-  CAN: "1B",
-  MEX: "1A",
-  USA: "1D",
-};
-const roundOf32EventIdMap = {
-  760486: 73,
-  760489: 74,
-  760488: 75,
-  760487: 76,
-  760492: 77,
-  760490: 78,
-  760491: 79,
-  760495: 80,
-  760494: 81,
-  760493: 82,
-  760496: 83,
-  760497: 84,
-  760498: 85,
-  760500: 86,
-  760501: 87,
-  760499: 88,
 };
 
 function ymd(date) {
@@ -170,17 +147,62 @@ async function fetchMatches() {
   return [...byId.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
 }
 
-async function fetchRoundOf32Schedule() {
+function teamGroupsFromMatches(matches) {
+  const teamGroups = new Map();
+  matches.forEach((match) => {
+    match.competitors.forEach((team) => {
+      if (team.abbreviation) teamGroups.set(team.abbreviation, match.group);
+    });
+  });
+  return teamGroups;
+}
+
+function slotCandidatesForTeam(abbreviation, teamGroups) {
+  if (!abbreviation) return [];
+  if (/^[12][A-L]$/.test(abbreviation) || abbreviation === "3RD") return [abbreviation];
+
+  const group = teamGroups.get(abbreviation);
+  if (!group) return [abbreviation];
+
+  return [`1${group}`, `2${group}`, "3RD"];
+}
+
+function candidateRoundOf32Keys(candidateSlots, index = 0, current = [], keys = []) {
+  if (index >= candidateSlots.length) {
+    keys.push(current.join("-"));
+    return keys;
+  }
+
+  candidateSlots[index].forEach((slot) => {
+    current.push(slot);
+    candidateRoundOf32Keys(candidateSlots, index + 1, current, keys);
+    current.pop();
+  });
+
+  return keys;
+}
+
+function roundOf32MatchNumberForEvent(event, teamGroups) {
+  const competition = event.competitions?.[0];
+  const candidateSlots = (competition?.competitors ?? [])
+    .slice()
+    .sort((a, b) => a.order - b.order)
+    .map((competitor) => slotCandidatesForTeam(competitor.team?.abbreviation, teamGroups));
+  const matchNumbers = new Set(
+    candidateRoundOf32Keys(candidateSlots)
+      .map((key) => roundOf32SlotMap[key])
+      .filter(Boolean),
+  );
+
+  return matchNumbers.size === 1 ? [...matchNumbers][0] : null;
+}
+
+async function fetchRoundOf32Schedule(teamGroups) {
   return (await fetchScoreboardRange(roundOf32Start, roundOf32End))
     .filter((event) => event.season?.slug === "round-of-32")
     .map((event) => {
       const competition = event.competitions?.[0];
-      const slots = (competition?.competitors ?? [])
-        .slice()
-        .sort((a, b) => a.order - b.order)
-        .map((competitor) => hostSlotAliases[competitor.team?.abbreviation] ?? competitor.team?.abbreviation);
-      const key = slots.join("-");
-      const matchNumber = roundOf32SlotMap[key] ?? roundOf32EventIdMap[event.id];
+      const matchNumber = roundOf32MatchNumberForEvent(event, teamGroups);
       if (!matchNumber) return null;
 
       return {
@@ -239,6 +261,8 @@ async function fetchThirdPlaceRules() {
   return parseThirdPlaceRows(data.parse.wikitext);
 }
 
+const matches = await fetchMatches();
+
 const payload = {
   generatedAt: new Date().toISOString(),
   sources: {
@@ -248,8 +272,8 @@ const payload = {
     fifaFormat:
       "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/groups-how-teams-qualify-tie-breakers",
   },
-  matches: await fetchMatches(),
-  roundOf32Schedule: await fetchRoundOf32Schedule(),
+  matches,
+  roundOf32Schedule: await fetchRoundOf32Schedule(teamGroupsFromMatches(matches)),
   thirdPlaceRules: await fetchThirdPlaceRules(),
 };
 

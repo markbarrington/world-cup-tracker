@@ -66,7 +66,7 @@
     "1C-2F": 76,
     "1I-3RD": 77,
     "2E-2I": 78,
-    "MEX-3RD": 79,
+    "1A-3RD": 79,
     "1L-3RD": 80,
     "1D-3RD": 81,
     "1G-3RD": 82,
@@ -76,29 +76,6 @@
     "1J-2H": 86,
     "1K-3RD": 87,
     "2D-2G": 88,
-  };
-  const hostSlotAliases = {
-    CAN: "1B",
-    MEX: "1A",
-    USA: "1D",
-  };
-  const roundOf32EventIdMap = {
-    760486: 73,
-    760489: 74,
-    760488: 75,
-    760487: 76,
-    760492: 77,
-    760490: 78,
-    760491: 79,
-    760495: 80,
-    760494: 81,
-    760493: 82,
-    760496: 83,
-    760497: 84,
-    760498: 85,
-    760500: 86,
-    760501: 87,
-    760499: 88,
   };
 
   function loadCachedData() {
@@ -216,6 +193,59 @@
     return [...byId.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
   }
 
+  function teamGroupsFromEvents(events) {
+    const teamGroups = new Map();
+    events.forEach((event) => {
+      const competition = event.competitions?.[0];
+      const group = competition?.altGameNote?.match(/Group ([A-L])/)?.[1];
+      if (!group || event.season?.slug !== "group-stage") return;
+      (competition?.competitors || []).forEach((competitor) => {
+        if (competitor.team?.abbreviation) teamGroups.set(competitor.team.abbreviation, group);
+      });
+    });
+    return teamGroups;
+  }
+
+  function slotCandidatesForTeam(abbreviation, teamGroups) {
+    if (!abbreviation) return [];
+    if (/^[12][A-L]$/.test(abbreviation) || abbreviation === "3RD") return [abbreviation];
+
+    const group = teamGroups.get(abbreviation);
+    if (!group) return [abbreviation];
+
+    return [`1${group}`, `2${group}`, "3RD"];
+  }
+
+  function candidateRoundOf32Keys(candidateSlots, index = 0, current = [], keys = []) {
+    if (index >= candidateSlots.length) {
+      keys.push(current.join("-"));
+      return keys;
+    }
+
+    candidateSlots[index].forEach((slot) => {
+      current.push(slot);
+      candidateRoundOf32Keys(candidateSlots, index + 1, current, keys);
+      current.pop();
+    });
+
+    return keys;
+  }
+
+  function roundOf32MatchNumberForEvent(event, teamGroups) {
+    const competition = event.competitions?.[0];
+    const candidateSlots = (competition?.competitors || [])
+      .slice()
+      .sort((a, b) => a.order - b.order)
+      .map((competitor) => slotCandidatesForTeam(competitor.team?.abbreviation, teamGroups));
+    const matchNumbers = new Set(
+      candidateRoundOf32Keys(candidateSlots)
+        .map((key) => roundOf32SlotMap[key])
+        .filter(Boolean),
+    );
+
+    return matchNumbers.size === 1 ? [...matchNumbers][0] : null;
+  }
+
   async function fetchTournamentEvents() {
     const scoreboard = await fetchJson(
       `${ESPN_SCOREBOARD}?limit=300&dates=${ymd(groupStart)}-${ymd(roundOf32End)}`,
@@ -228,16 +258,12 @@
   }
 
   function extractRoundOf32Schedule(events) {
+    const teamGroups = teamGroupsFromEvents(events);
     return events
       .filter((event) => event.season?.slug === "round-of-32")
       .map((event) => {
         const competition = event.competitions?.[0];
-        const slots = (competition?.competitors || [])
-          .slice()
-          .sort((a, b) => a.order - b.order)
-          .map((competitor) => hostSlotAliases[competitor.team?.abbreviation] || competitor.team?.abbreviation);
-        const key = slots.join("-");
-        const matchNumber = roundOf32SlotMap[key] || roundOf32EventIdMap[event.id];
+        const matchNumber = roundOf32MatchNumberForEvent(event, teamGroups);
         if (!matchNumber) return null;
 
         return {
