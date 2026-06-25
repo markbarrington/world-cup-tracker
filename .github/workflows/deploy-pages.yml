@@ -29,9 +29,6 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Refresh match data
-        run: npm run fetch:data
-
       - name: Prepare static site
         run: npm run prepare:pages
 
