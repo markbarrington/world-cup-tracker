@@ -466,9 +466,68 @@
     }, 0);
   }
 
+  function allScoresFixed(matches, liveMode) {
+    return matches.every((match) => fixedOutcome(match, liveMode));
+  }
+
+  function scoreStatsFor(teamId, matches, tiedIds = null) {
+    return matches.reduce(
+      (stats, match) => {
+        const [home, away] = match.competitors;
+        if (tiedIds && (!tiedIds.includes(home.id) || !tiedIds.includes(away.id))) return stats;
+        if (home.id !== teamId && away.id !== teamId) return stats;
+
+        const isHome = home.id === teamId;
+        const gf = isHome ? home.score : away.score;
+        const ga = isHome ? away.score : home.score;
+        stats.gd += gf - ga;
+        stats.gf += gf;
+        return stats;
+      },
+      { gd: 0, gf: 0 },
+    );
+  }
+
+  function splitByKnownScoreTiebreakers(rows, matches) {
+    const tiedIds = rows.map((row) => row.id);
+    const rankedRows = rows
+      .map((row) => ({
+        row,
+        headToHead: scoreStatsFor(row.id, matches, tiedIds),
+        overall: scoreStatsFor(row.id, matches),
+      }))
+      .sort((a, b) => {
+        if (b.headToHead.gd !== a.headToHead.gd) return b.headToHead.gd - a.headToHead.gd;
+        if (b.headToHead.gf !== a.headToHead.gf) return b.headToHead.gf - a.headToHead.gf;
+        if (b.overall.gd !== a.overall.gd) return b.overall.gd - a.overall.gd;
+        if (b.overall.gf !== a.overall.gf) return b.overall.gf - a.overall.gf;
+        return 0;
+      });
+
+    const tiers = [];
+    rankedRows.forEach((entry) => {
+      const previous = tiers.at(-1)?.[0];
+      const tiedWithPrevious =
+        previous &&
+        previous.headToHead.gd === entry.headToHead.gd &&
+        previous.headToHead.gf === entry.headToHead.gf &&
+        previous.overall.gd === entry.overall.gd &&
+        previous.overall.gf === entry.overall.gf;
+
+      if (tiedWithPrevious) {
+        tiers.at(-1).push(entry);
+      } else {
+        tiers.push([entry]);
+      }
+    });
+
+    return tiers.map((tier) => tier.map((entry) => entry.row));
+  }
+
   function rankTiersFromScenario(rows, matches, outcomes, liveMode) {
     const byPoints = new Map();
     rows.forEach((row) => byPoints.set(row.points, [...(byPoints.get(row.points) || []), row]));
+    const scoresFixed = allScoresFixed(matches, liveMode);
 
     return [...byPoints.entries()]
       .sort((a, b) => b[0] - a[0])
@@ -484,7 +543,10 @@
 
         return [...byH2hPoints.entries()]
           .sort((a, b) => b[0] - a[0])
-          .map(([, h2hRows]) => h2hRows);
+          .flatMap(([, h2hRows]) => {
+            if (h2hRows.length === 1 || !scoresFixed) return [h2hRows];
+            return splitByKnownScoreTiebreakers(h2hRows, matches);
+          });
       });
   }
 
