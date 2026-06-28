@@ -1030,21 +1030,15 @@
   }
 
   function bracketTeam(slot, team) {
-    const locked = qualificationAnalysis.slots[slot];
     const projectedStatus = team ? qualificationAnalysis.teams[team.id] : null;
-    const displayTeam = locked?.team || (projectedStatus?.finalStatus === "eliminated" ? null : team);
-    const isLiveLocked = locked?.finalStatus?.startsWith("live-");
-    const className = locked ? `bracketTeam ${isLiveLocked ? "liveLockedSlot" : "lockedSlot"}` : "bracketTeam";
-    const description = locked
-      ? `${isLiveLocked ? "Live: would be" : "Locked"} Group ${locked.group} ${locked.finalStatus.endsWith("first") ? "winner" : "runner-up"}`
-      : slotDescription(slot);
+    const displayTeam = projectedStatus?.finalStatus === "eliminated" ? null : team;
 
     return `
-      <div class="${className}">
+      <div class="bracketTeam">
         <span class="slot">${escapeHtml(slot)}</span>
         <span class="bracketTeamText">
           ${teamName(displayTeam)}
-          <small>${escapeHtml(description)}</small>
+          <small>${escapeHtml(slotDescription(slot))}</small>
         </span>
       </div>
     `;
