@@ -9,6 +9,7 @@
   const groupStart = new Date("2026-06-11T00:00:00Z");
   const roundOf32End = new Date("2026-07-04T00:00:00Z");
   const groups = "ABCDEFGHIJKL".split("");
+  const DEFAULT_VIEW = "knockout";
   let refreshTimer = null;
   let qualificationAnalysis = emptyQualificationAnalysis();
   let data = loadCachedData() || {
@@ -206,9 +207,98 @@
     return teamGroups;
   }
 
-  function slotCandidatesForTeam(abbreviation, teamGroups) {
+  function finalHeadToHeadStats(teamId, tiedIds, matches) {
+    const stats = { points: 0, gd: 0, gf: 0 };
+    matches.forEach((match) => {
+      const [home, away] = match.competitors;
+      if (!tiedIds.includes(home.id) || !tiedIds.includes(away.id)) return;
+      const isHome = home.id === teamId;
+      const gf = isHome ? home.score : away.score;
+      const ga = isHome ? away.score : home.score;
+      stats.points += pointsFor(gf, ga);
+      stats.gd += gf - ga;
+      stats.gf += gf;
+    });
+    return stats;
+  }
+
+  function tableForFinalGroup(matches, group) {
+    const groupMatches = matches.filter((match) => match.group === group);
+    const teams = new Map();
+
+    groupMatches.forEach((match) => {
+      match.competitors.forEach((team) => {
+        teams.set(team.id, {
+          ...team,
+          played: 0,
+          gf: 0,
+          ga: 0,
+          gd: 0,
+          points: 0,
+        });
+      });
+    });
+
+    groupMatches.forEach((match) => {
+      const [home, away] = match.competitors;
+      const apply = (row, gf, ga) => {
+        row.played += 1;
+        row.gf += gf;
+        row.ga += ga;
+        row.gd = row.gf - row.ga;
+        row.points += pointsFor(gf, ga);
+      };
+      apply(teams.get(home.id), home.score, away.score);
+      apply(teams.get(away.id), away.score, home.score);
+    });
+
+    const rows = [...teams.values()];
+    const tiedByPoints = new Map();
+    rows.forEach((row) => tiedByPoints.set(row.points, [...(tiedByPoints.get(row.points) || []), row.id]));
+
+    return rows.sort((a, b) => {
+      if (b.points !== a.points) return b.points - a.points;
+      const tiedIds = tiedByPoints.get(a.points) || [];
+      if (tiedIds.length > 1) {
+        const ah = finalHeadToHeadStats(a.id, tiedIds, groupMatches);
+        const bh = finalHeadToHeadStats(b.id, tiedIds, groupMatches);
+        if (bh.points !== ah.points) return bh.points - ah.points;
+        if (bh.gd !== ah.gd) return bh.gd - ah.gd;
+        if (bh.gf !== ah.gf) return bh.gf - ah.gf;
+      }
+      if (b.gd !== a.gd) return b.gd - a.gd;
+      if (b.gf !== a.gf) return b.gf - a.gf;
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  function teamSlotsFromFinalStandings(matches) {
+    const allGroupsFinal = groups.every((group) => {
+      const groupMatches = matches.filter((match) => match.group === group);
+      return groupMatches.length === 6 && groupMatches.every((match) => match.status.completed);
+    });
+
+    if (!allGroupsFinal) return new Map();
+
+    const slots = new Map();
+    groups.forEach((group) => {
+      tableForFinalGroup(matches, group).forEach((team, index) => {
+        slots.set(team.abbreviation, `${index + 1}${group}`);
+      });
+    });
+    return slots;
+  }
+
+  function roundOf32KeySlot(slot) {
+    return /^3[A-L]$/.test(slot) ? "3RD" : slot;
+  }
+
+  function slotCandidatesForTeam(abbreviation, teamGroups, teamSlots) {
     if (!abbreviation) return [];
     if (/^[12][A-L]$/.test(abbreviation) || abbreviation === "3RD") return [abbreviation];
+
+    const finalSlot = teamSlots.get(abbreviation);
+    if (finalSlot) return [roundOf32KeySlot(finalSlot)];
 
     const group = teamGroups.get(abbreviation);
     if (!group) return [abbreviation];
@@ -231,12 +321,12 @@
     return keys;
   }
 
-  function roundOf32MatchNumberForEvent(event, teamGroups) {
+  function roundOf32MatchNumberForEvent(event, teamGroups, teamSlots) {
     const competition = event.competitions?.[0];
     const candidateSlots = (competition?.competitors || [])
       .slice()
       .sort((a, b) => a.order - b.order)
-      .map((competitor) => slotCandidatesForTeam(competitor.team?.abbreviation, teamGroups));
+      .map((competitor) => slotCandidatesForTeam(competitor.team?.abbreviation, teamGroups, teamSlots));
     const matchNumbers = new Set(
       candidateRoundOf32Keys(candidateSlots)
         .map((key) => roundOf32SlotMap[key])
@@ -257,13 +347,14 @@
     return [...byId.values()].sort((a, b) => new Date(a.date) - new Date(b.date));
   }
 
-  function extractRoundOf32Schedule(events) {
+  function extractRoundOf32Schedule(events, matches) {
     const teamGroups = teamGroupsFromEvents(events);
+    const teamSlots = teamSlotsFromFinalStandings(matches);
     return events
       .filter((event) => event.season?.slug === "round-of-32")
       .map((event) => {
         const competition = event.competitions?.[0];
-        const matchNumber = roundOf32MatchNumberForEvent(event, teamGroups);
+        const matchNumber = roundOf32MatchNumberForEvent(event, teamGroups, teamSlots);
         if (!matchNumber) return null;
 
         return {
@@ -290,7 +381,7 @@
   async function fetchFreshData() {
     const [events, thirdPlaceRules] = await Promise.all([fetchTournamentEvents(), fetchThirdPlaceRules()]);
     const matches = extractFreshMatches(events);
-    const roundOf32Schedule = extractRoundOf32Schedule(events);
+    const roundOf32Schedule = extractRoundOf32Schedule(events, matches);
     return {
       generatedAt: new Date().toISOString(),
       sources: {
@@ -405,6 +496,10 @@
       source: match.status.completed ? "final" : "live",
       label: match.status.completed ? "FT" : match.status.detail,
     };
+  }
+
+  function groupStageComplete() {
+    return data.matches.length === 72 && data.matches.every((match) => match.status.completed);
   }
 
   function emptyQualificationAnalysis() {
@@ -871,17 +966,19 @@
   }
 
   function renderGroups() {
+    const finalGroups = groupStageComplete();
     document.getElementById("groupsView").innerHTML = groups.map((group) => {
       const rows = tableForGroup(group, "current");
       const matches = data.matches.filter((match) => match.group === group);
+      const completedMatches = matches.filter((match) => match.status.completed).length;
       return `
         <section class="groupCard">
           <div class="groupHeader">
             <h2>Group ${group}</h2>
-            <span>${matches.filter((match) => match.status.completed).length}/6 final</span>
+            <span>${completedMatches === 6 ? "Final table" : `${completedMatches}/6 final`}</span>
           </div>
           <table class="standings">
-            <thead><tr><th>Team</th><th>P</th><th>GD</th><th>Pts</th></tr></thead>
+            <thead><tr><th>${finalGroups ? "Final position" : "Team"}</th><th>P</th><th>GD</th><th>Pts</th></tr></thead>
             <tbody>
               ${rows.map((team, index) => `
                 <tr class="qualificationRow ${escapeHtml(qualificationAnalysis.teams[team.id]?.finalStatus || "open")}">
@@ -901,7 +998,7 @@
                 <a class="scoreRow ${score.source}" href="${escapeHtml(match.sourceUrl)}" target="_blank" rel="noreferrer">
                   <span class="date">${formatTime(match.date)}</span>
                   <span class="scoreTeams"><span>${home.abbreviation}</span><strong>${score.home}-${score.away}</strong><span>${away.abbreviation}</span></span>
-                  <span class="scoreStatus">${escapeHtml(score.source === "projected" ? "Projected" : score.label)}</span>
+                  <span class="scoreStatus">${escapeHtml(score.source === "projected" ? "Projected" : "Final")}</span>
                 </a>
               `;
             }).join("")}
@@ -955,11 +1052,12 @@
 
   function renderKnockout() {
     const { thirdRanked, advancingThirds, rule, slots } = getQualifiers();
+    const finalGroups = groupStageComplete();
     const advancingKeys = new Set(advancingThirds.map((row) => row.group));
     const matchesById = Object.fromEntries(roundOf32.map((match) => [match.id, match]));
     document.getElementById("knockoutView").innerHTML = `
       <aside class="thirdPanel">
-        <div class="panelTitle"><h2>Third-place cut</h2><span>Top 8 projected</span></div>
+        <div class="panelTitle"><h2>Third-place cut</h2><span>${finalGroups ? "Final top 8" : "Top 8 projected"}</span></div>
         <ol class="thirdList">
           ${thirdRanked.map(({ group, team }, index) => `
             <li class="${advancingKeys.has(group) ? "advancing" : ""}">
@@ -970,7 +1068,7 @@
         <div class="ruleNote"><strong>Annex C option ${rule ? rule.option : "n/a"}</strong><span>${advancingThirds.map((row) => row.group).join(", ")} advance.</span></div>
       </aside>
       <section class="bracketCanvas">
-        <div class="bracketHeader"><h2>Round of 32 projection</h2><span>Grouped in FIFA bracket order</span></div>
+        <div class="bracketHeader"><h2>${finalGroups ? "Round of 32" : "Round of 32 projection"}</h2><span>${finalGroups ? "Final bracket slots" : "Grouped in FIFA bracket order"}</span></div>
         <div class="pathGrid">
           ${bracketPaths.map((path) => `
             <section class="pathGroup">
@@ -1024,8 +1122,9 @@
     const latest = data.matches
       .filter((match) => match.status.state === "in" || match.status.completed)
       .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+    const latestLabel = groupStageComplete() ? "Last group match" : "Last active match";
     document.getElementById("snapshot").textContent =
-      `${sourceLabel}: ${new Date(data.generatedAt).toLocaleString()} · Last active match: ${latest?.name ?? "none"} · Next refresh: ${Math.round(nextRefreshDelay() / 60000)} min`;
+      `${sourceLabel}: ${new Date(data.generatedAt).toLocaleString()} · ${latestLabel}: ${latest?.name ?? "none"} · Next refresh: ${Math.round(nextRefreshDelay() / 60000)} min`;
     document.getElementById("finalCount").textContent = data.matches.filter((match) => match.status.completed).length;
     document.getElementById("liveCount").textContent = data.matches.filter((match) => match.status.state === "in").length;
     document.getElementById("projectedCount").textContent = data.matches.filter((match) => !match.status.completed && match.status.state !== "in").length;
@@ -1038,6 +1137,7 @@
   document.querySelectorAll("[data-view]").forEach((button) => {
     button.addEventListener("click", () => setView(button.dataset.view));
   });
+  setView(DEFAULT_VIEW);
   refreshFromLiveSources().catch((error) => {
     console.warn("Initial live data refresh failed", error);
     scheduleNextRefresh();

@@ -78,6 +78,12 @@ function cleanOdds(odds) {
   };
 }
 
+function pointsFor(goalsFor, goalsAgainst) {
+  if (goalsFor > goalsAgainst) return 3;
+  if (goalsFor === goalsAgainst) return 1;
+  return 0;
+}
+
 async function fetchJson(url) {
   const response = await fetch(url, {
     headers: {
@@ -157,9 +163,101 @@ function teamGroupsFromMatches(matches) {
   return teamGroups;
 }
 
-function slotCandidatesForTeam(abbreviation, teamGroups) {
+function headToHeadStats(teamId, tiedIds, matches) {
+  const stats = { points: 0, gd: 0, gf: 0 };
+  for (const match of matches) {
+    const [home, away] = match.competitors;
+    if (!tiedIds.includes(home.id) || !tiedIds.includes(away.id)) continue;
+    const isHome = home.id === teamId;
+    const gf = isHome ? home.score : away.score;
+    const ga = isHome ? away.score : home.score;
+    stats.points += pointsFor(gf, ga);
+    stats.gd += gf - ga;
+    stats.gf += gf;
+  }
+  return stats;
+}
+
+function tableForFinalGroup(matches, group) {
+  const groupMatches = matches.filter((match) => match.group === group);
+  const teams = new Map();
+
+  for (const match of groupMatches) {
+    for (const team of match.competitors) {
+      teams.set(team.id, {
+        ...team,
+        played: 0,
+        gf: 0,
+        ga: 0,
+        gd: 0,
+        points: 0,
+      });
+    }
+  }
+
+  for (const match of groupMatches) {
+    const [home, away] = match.competitors;
+    const apply = (row, gf, ga) => {
+      row.played += 1;
+      row.gf += gf;
+      row.ga += ga;
+      row.gd = row.gf - row.ga;
+      row.points += pointsFor(gf, ga);
+    };
+    apply(teams.get(home.id), home.score, away.score);
+    apply(teams.get(away.id), away.score, home.score);
+  }
+
+  const rows = [...teams.values()];
+  const tiedByPoints = new Map();
+  for (const row of rows) {
+    tiedByPoints.set(row.points, [...(tiedByPoints.get(row.points) ?? []), row.id]);
+  }
+
+  return rows.sort((a, b) => {
+    if (b.points !== a.points) return b.points - a.points;
+    const tiedIds = tiedByPoints.get(a.points) ?? [];
+    if (tiedIds.length > 1) {
+      const ah = headToHeadStats(a.id, tiedIds, groupMatches);
+      const bh = headToHeadStats(b.id, tiedIds, groupMatches);
+      if (bh.points !== ah.points) return bh.points - ah.points;
+      if (bh.gd !== ah.gd) return bh.gd - ah.gd;
+      if (bh.gf !== ah.gf) return bh.gf - ah.gf;
+    }
+    if (b.gd !== a.gd) return b.gd - a.gd;
+    if (b.gf !== a.gf) return b.gf - a.gf;
+    return a.name.localeCompare(b.name);
+  });
+}
+
+function teamSlotsFromFinalStandings(matches) {
+  const groups = "ABCDEFGHIJKL".split("");
+  const allGroupsFinal = groups.every((group) => {
+    const groupMatches = matches.filter((match) => match.group === group);
+    return groupMatches.length === 6 && groupMatches.every((match) => match.status.completed);
+  });
+
+  if (!allGroupsFinal) return new Map();
+
+  const slots = new Map();
+  for (const group of groups) {
+    tableForFinalGroup(matches, group).forEach((team, index) => {
+      slots.set(team.abbreviation, `${index + 1}${group}`);
+    });
+  }
+  return slots;
+}
+
+function roundOf32KeySlot(slot) {
+  return /^3[A-L]$/.test(slot) ? "3RD" : slot;
+}
+
+function slotCandidatesForTeam(abbreviation, teamGroups, teamSlots) {
   if (!abbreviation) return [];
   if (/^[12][A-L]$/.test(abbreviation) || abbreviation === "3RD") return [abbreviation];
+
+  const finalSlot = teamSlots.get(abbreviation);
+  if (finalSlot) return [roundOf32KeySlot(finalSlot)];
 
   const group = teamGroups.get(abbreviation);
   if (!group) return [abbreviation];
@@ -182,12 +280,12 @@ function candidateRoundOf32Keys(candidateSlots, index = 0, current = [], keys = 
   return keys;
 }
 
-function roundOf32MatchNumberForEvent(event, teamGroups) {
+function roundOf32MatchNumberForEvent(event, teamGroups, teamSlots) {
   const competition = event.competitions?.[0];
   const candidateSlots = (competition?.competitors ?? [])
     .slice()
     .sort((a, b) => a.order - b.order)
-    .map((competitor) => slotCandidatesForTeam(competitor.team?.abbreviation, teamGroups));
+    .map((competitor) => slotCandidatesForTeam(competitor.team?.abbreviation, teamGroups, teamSlots));
   const matchNumbers = new Set(
     candidateRoundOf32Keys(candidateSlots)
       .map((key) => roundOf32SlotMap[key])
@@ -197,12 +295,14 @@ function roundOf32MatchNumberForEvent(event, teamGroups) {
   return matchNumbers.size === 1 ? [...matchNumbers][0] : null;
 }
 
-async function fetchRoundOf32Schedule(teamGroups) {
+async function fetchRoundOf32Schedule(matches) {
+  const teamGroups = teamGroupsFromMatches(matches);
+  const teamSlots = teamSlotsFromFinalStandings(matches);
   return (await fetchScoreboardRange(roundOf32Start, roundOf32End))
     .filter((event) => event.season?.slug === "round-of-32")
     .map((event) => {
       const competition = event.competitions?.[0];
-      const matchNumber = roundOf32MatchNumberForEvent(event, teamGroups);
+      const matchNumber = roundOf32MatchNumberForEvent(event, teamGroups, teamSlots);
       if (!matchNumber) return null;
 
       return {
@@ -273,7 +373,7 @@ const payload = {
       "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/groups-how-teams-qualify-tie-breakers",
   },
   matches,
-  roundOf32Schedule: await fetchRoundOf32Schedule(teamGroupsFromMatches(matches)),
+  roundOf32Schedule: await fetchRoundOf32Schedule(matches),
   thirdPlaceRules: await fetchThirdPlaceRules(),
 };
 

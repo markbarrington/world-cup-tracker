@@ -15,8 +15,8 @@
         </div>
         <div class="actions">
           <div class="tabs" role="tablist" aria-label="Views">
-            <button class="active" data-view="groups" type="button">▦ Groups</button>
-            <button data-view="knockout" type="button">⌁ Knockout</button>
+            <button data-view="groups" type="button">▦ Groups</button>
+            <button class="active" data-view="knockout" type="button">⌁ Knockout</button>
           </div>
         </div>
       </header>
@@ -24,11 +24,11 @@
       <section class="summaryStrip">
         <div><strong id="finalCount">0</strong> finals</div>
         <div><strong id="liveCount">0</strong> live</div>
-        <div><strong id="projectedCount">0</strong> projected</div>
+        <div><strong id="projectedCount">0</strong> unplayed group matches</div>
       </section>
 
-      <section id="groupsView" class="groupGrid"></section>
-      <section id="knockoutView" class="knockoutLayout hidden"></section>
+      <section id="groupsView" class="groupGrid hidden"></section>
+      <section id="knockoutView" class="knockoutLayout"></section>
     </main>
     <script src="./src/data/third-place-rules.js"></script>
     <script src="./src/static-app.js"></script>

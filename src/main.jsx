@@ -5,6 +5,7 @@ import data from "./data/worldcup-data.json";
 import "./styles.css";
 
 const groups = "ABCDEFGHIJKL".split("");
+const DEFAULT_VIEW = "knockout";
 
 const thirdPlaceSlots = {
   "1A": "Winner Group A",
@@ -148,6 +149,10 @@ function currentScore(match) {
   };
 }
 
+function groupStageComplete() {
+  return data.matches.length === 72 && data.matches.every((match) => match.status.completed);
+}
+
 function tableForGroup(group, mode = "current") {
   const matches = data.matches.filter((match) => match.group === group);
   const teams = new Map();
@@ -274,19 +279,21 @@ function slotDescription(slot) {
 }
 
 function GroupCard({ group }) {
+  const finalGroups = groupStageComplete();
   const rows = tableForGroup(group, "current");
   const matches = data.matches.filter((match) => match.group === group);
+  const completedMatches = matches.filter((match) => match.status.completed).length;
 
   return (
     <section className="groupCard">
       <div className="groupHeader">
         <h2>Group {group}</h2>
-        <span>{matches.filter((match) => match.status.completed).length}/6 final</span>
+        <span>{completedMatches === 6 ? "Final table" : `${completedMatches}/6 final`}</span>
       </div>
       <table className="standings">
         <thead>
           <tr>
-            <th>Team</th>
+            <th>{finalGroups ? "Final position" : "Team"}</th>
             <th>P</th>
             <th>GD</th>
             <th>Pts</th>
@@ -318,7 +325,7 @@ function GroupCard({ group }) {
                 <strong>{score.home}-{score.away}</strong>
                 <span>{away.abbreviation}</span>
               </span>
-              <span className="scoreStatus">{score.source === "projected" ? "Projected" : score.label}</span>
+              <span className="scoreStatus">{score.source === "projected" ? "Projected" : "Final"}</span>
             </a>
           );
         })}
@@ -341,6 +348,7 @@ function BracketTeam({ slot, team }) {
 
 function KnockoutView() {
   const { thirdRanked, advancingThirds, rule, slots } = getQualifiers();
+  const finalGroups = groupStageComplete();
   const advancingKeys = new Set(advancingThirds.map((row) => row.group));
   const matchesById = Object.fromEntries(roundOf32.map((match) => [match.id, match]));
 
@@ -349,7 +357,7 @@ function KnockoutView() {
       <aside className="thirdPanel">
         <div className="panelTitle">
           <h2>Third-place cut</h2>
-          <span>Top 8 projected</span>
+          <span>{finalGroups ? "Final top 8" : "Top 8 projected"}</span>
         </div>
         <ol className="thirdList">
           {thirdRanked.map(({ group, team }, index) => (
@@ -369,8 +377,8 @@ function KnockoutView() {
 
       <section className="bracketCanvas">
         <div className="bracketHeader">
-          <h2>Round of 32 projection</h2>
-          <span>Grouped in FIFA bracket order</span>
+          <h2>{finalGroups ? "Round of 32" : "Round of 32 projection"}</h2>
+          <span>{finalGroups ? "Final bracket slots" : "Grouped in FIFA bracket order"}</span>
         </div>
         <div className="pathGrid">
           {bracketPaths.map((path) => (
@@ -414,10 +422,11 @@ function KnockoutView() {
 }
 
 function App() {
-  const [view, setView] = React.useState("groups");
+  const [view, setView] = React.useState(DEFAULT_VIEW);
   const latest = data.matches
     .filter((match) => match.status.state === "in" || match.status.completed)
     .sort((a, b) => new Date(b.date) - new Date(a.date))[0];
+  const latestLabel = groupStageComplete() ? "Last group match" : "Last active match";
 
   return (
     <main className="appShell">
@@ -425,7 +434,7 @@ function App() {
         <div>
           <h1>World Cup Tables</h1>
           <p>
-            Latest snapshot: {new Date(data.generatedAt).toLocaleString()} · Last active match: {latest?.name}
+            Latest snapshot: {new Date(data.generatedAt).toLocaleString()} · {latestLabel}: {latest?.name}
           </p>
         </div>
         <div className="actions">
@@ -454,7 +463,7 @@ function App() {
         </div>
         <div>
           <strong>{data.matches.filter((match) => !match.status.completed && match.status.state !== "in").length}</strong>
-          projected
+          unplayed group matches
         </div>
       </div>
 

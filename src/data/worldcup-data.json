@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T23:44:10.429Z",
+  "generatedAt": "2026-06-28T05:25:08.146Z",
   "sources": {
     "scores": "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard",
     "thirdPlaceRules": "https://en.wikipedia.org/wiki/Template:2026_FIFA_World_Cup_third-place_table",
@@ -660,7 +660,7 @@
           "shortName": "Senegal",
           "abbreviation": "SEN",
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/sen.png",
-          "color": "#006436",
+          "color": "#FFFFFF",
           "homeAway": "away",
           "score": 1,
           "winner": false
@@ -688,7 +688,7 @@
           "shortName": "Iraq",
           "abbreviation": "IRQ",
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/irq.png",
-          "color": "#0A4D2E",
+          "color": "#FFFFFF",
           "homeAway": "home",
           "score": 1,
           "winner": false
@@ -1144,10 +1144,10 @@
       "name": "Morocco at Scotland",
       "venue": "Gillette Stadium",
       "status": {
-        "state": "in",
-        "description": "Second Half",
-        "detail": "81'",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1170,29 +1170,11 @@
           "color": "#df2027",
           "homeAway": "away",
           "score": 1,
-          "winner": false
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+425",
-          "draw": "+270",
-          "away": "-140"
-        },
-        "implied": {
-          "home": 0.19047619047619047,
-          "draw": 0.2702702702702703,
-          "away": 0.5833333333333334
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
-      "sourceUrl": ""
+      "odds": null,
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760445/morocco-scotland"
     },
     {
       "id": "760444",
@@ -1201,10 +1183,10 @@
       "name": "Haiti at Brazil",
       "venue": "Lincoln Financial Field",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1215,8 +1197,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/bra.png",
           "color": "#fee000",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         },
         {
           "id": "2654",
@@ -1230,25 +1212,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-900",
-          "draw": "+950",
-          "away": "+2000"
-        },
-        "implied": {
-          "home": 0.9,
-          "draw": 0.09523809523809523,
-          "away": 0.047619047619047616
-        },
-        "favorite": "home",
-        "overUnder": 3.5,
-        "spread": {
-          "home": "-2.5",
-          "away": "+2.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760444/haiti-brazil"
     },
     {
@@ -1258,10 +1222,10 @@
       "name": "Paraguay at Türkiye",
       "venue": "Levi's Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1283,29 +1247,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/par.png",
           "color": "#ea2300",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 1,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+110",
-          "draw": "+240",
-          "away": "+285"
-        },
-        "implied": {
-          "home": 0.47619047619047616,
-          "draw": 0.29411764705882354,
-          "away": 0.2597402597402597
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760443/paraguay-turkiye"
     },
     {
@@ -1315,10 +1261,10 @@
       "name": "Sweden at Netherlands",
       "venue": "NRG Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1329,8 +1275,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/ned.png",
           "color": "#fb5d00",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 5,
+          "winner": true
         },
         {
           "id": "466",
@@ -1340,29 +1286,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/swe.png",
           "color": "#fecb00",
           "homeAway": "away",
-          "score": 0,
+          "score": 1,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-135",
-          "draw": "+310",
-          "away": "+360"
-        },
-        "implied": {
-          "home": 0.574468085106383,
-          "draw": 0.24390243902439024,
-          "away": 0.21739130434782608
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760447/sweden-netherlands"
     },
     {
@@ -1372,10 +1300,10 @@
       "name": "Ivory Coast at Germany",
       "venue": "BMO Field",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1386,8 +1314,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/ger.png",
           "color": "#FFFFFF",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 2,
+          "winner": true
         },
         {
           "id": "4789",
@@ -1397,29 +1325,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/civ.png",
           "color": "#FF8200",
           "homeAway": "away",
-          "score": 0,
+          "score": 1,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-190",
-          "draw": "+370",
-          "away": "+475"
-        },
-        "implied": {
-          "home": 0.6551724137931034,
-          "draw": 0.2127659574468085,
-          "away": 0.17391304347826086
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-1.5",
-          "away": "+1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760448/ivory-coast-germany"
     },
     {
@@ -1429,10 +1339,10 @@
       "name": "Curaçao at Ecuador",
       "venue": "GEHA Field at Arrowhead Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1458,25 +1368,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-1000",
-          "draw": "+950",
-          "away": "+2500"
-        },
-        "implied": {
-          "home": 0.9090909090909091,
-          "draw": 0.09523809523809523,
-          "away": 0.038461538461538464
-        },
-        "favorite": "home",
-        "overUnder": 3.5,
-        "spread": {
-          "home": "-2.5",
-          "away": "+2.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760446/curacao-ecuador"
     },
     {
@@ -1486,10 +1378,10 @@
       "name": "Japan at Tunisia",
       "venue": "Estadio BBVA",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1511,29 +1403,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/jpn.png",
           "color": "#000555",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 4,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+600",
-          "draw": "+310",
-          "away": "-190"
-        },
-        "implied": {
-          "home": 0.14285714285714285,
-          "draw": 0.24390243902439024,
-          "away": 0.6551724137931034
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760449/japan-tunisia"
     },
     {
@@ -1543,10 +1417,10 @@
       "name": "Saudi Arabia at Spain",
       "venue": "Mercedes-Benz Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1557,8 +1431,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/esp.png",
           "color": "#c60b1e",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 4,
+          "winner": true
         },
         {
           "id": "655",
@@ -1572,25 +1446,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-1000",
-          "draw": "+950",
-          "away": "+2500"
-        },
-        "implied": {
-          "home": 0.9090909090909091,
-          "draw": 0.09523809523809523,
-          "away": 0.038461538461538464
-        },
-        "favorite": "home",
-        "overUnder": 3.5,
-        "spread": {
-          "home": "-2.5",
-          "away": "+2.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760453/saudi-arabia-spain"
     },
     {
@@ -1600,10 +1456,10 @@
       "name": "Iran at Belgium",
       "venue": "SoFi Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1629,25 +1485,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-225",
-          "draw": "+360",
-          "away": "+650"
-        },
-        "implied": {
-          "home": 0.6923076923076923,
-          "draw": 0.21739130434782608,
-          "away": 0.13333333333333333
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-1.5",
-          "away": "+1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760451/iran-belgium"
     },
     {
@@ -1657,10 +1495,10 @@
       "name": "Cape Verde at Uruguay",
       "venue": "Hard Rock Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1671,7 +1509,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/uru.png",
           "color": "#55B5E5",
           "homeAway": "home",
-          "score": 0,
+          "score": 2,
           "winner": false
         },
         {
@@ -1682,29 +1520,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/cpv.png",
           "color": "#000080",
           "homeAway": "away",
-          "score": 0,
+          "score": 2,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-215",
-          "draw": "+320",
-          "away": "+700"
-        },
-        "implied": {
-          "home": 0.6825396825396826,
-          "draw": 0.23809523809523808,
-          "away": 0.125
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-1.5",
-          "away": "+1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760450/cape-verde-uruguay"
     },
     {
@@ -1714,10 +1534,10 @@
       "name": "Egypt at New Zealand",
       "venue": "BC Place",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1728,7 +1548,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/nzl.png",
           "color": "#000000",
           "homeAway": "home",
-          "score": 0,
+          "score": 1,
           "winner": false
         },
         {
@@ -1739,29 +1559,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/egy.png",
           "color": "#D20300",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+450",
-          "draw": "+310",
-          "away": "-160"
-        },
-        "implied": {
-          "home": 0.18181818181818182,
-          "draw": 0.24390243902439024,
-          "away": 0.6153846153846154
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760452/egypt-new-zealand"
     },
     {
@@ -1771,10 +1573,10 @@
       "name": "Austria at Argentina",
       "venue": "AT&T Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1785,8 +1587,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/arg.png",
           "color": "#74acdf",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 2,
+          "winner": true
         },
         {
           "id": "474",
@@ -1800,25 +1602,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-170",
-          "draw": "+300",
-          "away": "+500"
-        },
-        "implied": {
-          "home": 0.6296296296296297,
-          "draw": 0.25,
-          "away": 0.16666666666666666
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760456/austria-argentina"
     },
     {
@@ -1828,10 +1612,10 @@
       "name": "Iraq at France",
       "venue": "Lincoln Financial Field",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1842,8 +1626,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/fra.png",
           "color": "#000080",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         },
         {
           "id": "4375",
@@ -1851,31 +1635,13 @@
           "shortName": "Iraq",
           "abbreviation": "IRQ",
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/irq.png",
-          "color": "#0A4D2E",
+          "color": "#FFFFFF",
           "homeAway": "away",
           "score": 0,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-1200",
-          "draw": "+1100",
-          "away": "+2800"
-        },
-        "implied": {
-          "home": 0.9230769230769231,
-          "draw": 0.08333333333333333,
-          "away": 0.034482758620689655
-        },
-        "favorite": "home",
-        "overUnder": 3.5,
-        "spread": {
-          "home": "-2.5",
-          "away": "+2.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760457/iraq-france"
     },
     {
@@ -1885,10 +1651,10 @@
       "name": "Senegal at Norway",
       "venue": "MetLife Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1899,8 +1665,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/nor.png",
           "color": "#C8102E",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         },
         {
           "id": "654",
@@ -1908,31 +1674,13 @@
           "shortName": "Senegal",
           "abbreviation": "SEN",
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/sen.png",
-          "color": "#006436",
+          "color": "#FFFFFF",
           "homeAway": "away",
-          "score": 0,
+          "score": 2,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+135",
-          "draw": "+250",
-          "away": "+195"
-        },
-        "implied": {
-          "home": 0.425531914893617,
-          "draw": 0.2857142857142857,
-          "away": 0.3389830508474576
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760454/senegal-norway"
     },
     {
@@ -1942,10 +1690,10 @@
       "name": "Algeria at Jordan",
       "venue": "Levi's Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -1956,7 +1704,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/jor.png",
           "color": "#E70000",
           "homeAway": "home",
-          "score": 0,
+          "score": 1,
           "winner": false
         },
         {
@@ -1967,29 +1715,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/alg.png",
           "color": "#4F9A44",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 2,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+500",
-          "draw": "+320",
-          "away": "-175"
-        },
-        "implied": {
-          "home": 0.16666666666666666,
-          "draw": 0.23809523809523808,
-          "away": 0.6363636363636364
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760455/algeria-jordan"
     },
     {
@@ -1999,10 +1729,10 @@
       "name": "Uzbekistan at Portugal",
       "venue": "NRG Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2013,8 +1743,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/por.png",
           "color": "#da291c",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 5,
+          "winner": true
         },
         {
           "id": "2570",
@@ -2028,25 +1758,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-500",
-          "draw": "+600",
-          "away": "+1400"
-        },
-        "implied": {
-          "home": 0.8333333333333334,
-          "draw": 0.14285714285714285,
-          "away": 0.06666666666666667
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-1.5",
-          "away": "+1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760461/uzbekistan-portugal"
     },
     {
@@ -2056,10 +1768,10 @@
       "name": "Ghana at England",
       "venue": "Gillette Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2085,25 +1797,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-450",
-          "draw": "+550",
-          "away": "+1300"
-        },
-        "implied": {
-          "home": 0.8181818181818182,
-          "draw": 0.15384615384615385,
-          "away": 0.07142857142857142
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-1.5",
-          "away": "+1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760458/ghana-england"
     },
     {
@@ -2113,10 +1807,10 @@
       "name": "Croatia at Panama",
       "venue": "BMO Field",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2138,29 +1832,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/cro.png",
           "color": "#ff0000",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 1,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+550",
-          "draw": "+310",
-          "away": "-185"
-        },
-        "implied": {
-          "home": 0.15384615384615385,
-          "draw": 0.24390243902439024,
-          "away": 0.6491228070175439
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760460/croatia-panama"
     },
     {
@@ -2170,10 +1846,10 @@
       "name": "Congo DR at Colombia",
       "venue": "Estadio Akron",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2184,8 +1860,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/col.png",
           "color": "#fbd632",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 1,
+          "winner": true
         },
         {
           "id": "2850",
@@ -2199,25 +1875,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-205",
-          "draw": "+330",
-          "away": "+650"
-        },
-        "implied": {
-          "home": 0.6721311475409836,
-          "draw": 0.23255813953488372,
-          "away": 0.13333333333333333
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-1.5",
-          "away": "+1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760459/congo-dr-colombia"
     },
     {
@@ -2227,10 +1885,10 @@
       "name": "Qatar at Bosnia-Herzegovina",
       "venue": "Lumen Field",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2241,8 +1899,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/bih.png",
           "color": "#112855",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         },
         {
           "id": "4398",
@@ -2252,29 +1910,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/qat.png",
           "color": "#691a40",
           "homeAway": "away",
-          "score": 0,
+          "score": 1,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-220",
-          "draw": "+390",
-          "away": "+550"
-        },
-        "implied": {
-          "home": 0.6875,
-          "draw": 0.20408163265306123,
-          "away": 0.15384615384615385
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-1.5",
-          "away": "+1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760462/qatar-bosnia-herzegovina"
     },
     {
@@ -2284,10 +1924,10 @@
       "name": "Canada at Switzerland",
       "venue": "BC Place",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2298,8 +1938,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/sui.png",
           "color": "#FF0000",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 2,
+          "winner": true
         },
         {
           "id": "206",
@@ -2309,29 +1949,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/can.png",
           "color": "#ed2224",
           "homeAway": "away",
-          "score": 0,
+          "score": 1,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+145",
-          "draw": "+210",
-          "away": "+220"
-        },
-        "implied": {
-          "home": 0.40816326530612246,
-          "draw": 0.3225806451612903,
-          "away": 0.3125
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760463/canada-switzerland"
     },
     {
@@ -2341,10 +1963,10 @@
       "name": "Haiti at Morocco",
       "venue": "Mercedes-Benz Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2355,8 +1977,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/mar.png",
           "color": "#df2027",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 4,
+          "winner": true
         },
         {
           "id": "2654",
@@ -2366,29 +1988,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/hai.png",
           "color": "#0033a0",
           "homeAway": "away",
-          "score": 0,
+          "score": 2,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-425",
-          "draw": "+500",
-          "away": "+1200"
-        },
-        "implied": {
-          "home": 0.8095238095238095,
-          "draw": 0.16666666666666666,
-          "away": 0.07692307692307693
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-1.5",
-          "away": "+1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760464/haiti-morocco"
     },
     {
@@ -2398,10 +2002,10 @@
       "name": "Brazil at Scotland",
       "venue": "Hard Rock Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2423,29 +2027,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/bra.png",
           "color": "#fee000",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+600",
-          "draw": "+450",
-          "away": "-255"
-        },
-        "implied": {
-          "home": 0.14285714285714285,
-          "draw": 0.18181818181818182,
-          "away": 0.7183098591549296
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+1.5",
-          "away": "-1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760465/brazil-scotland"
     },
     {
@@ -2455,10 +2041,10 @@
       "name": "Mexico at Czechia",
       "venue": "Estadio Banorte",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2480,29 +2066,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/mex.png",
           "color": "#006847",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+240",
-          "draw": "+270",
-          "away": "+110"
-        },
-        "implied": {
-          "home": 0.29411764705882354,
-          "draw": 0.2702702702702703,
-          "away": 0.47619047619047616
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760467/mexico-czechia"
     },
     {
@@ -2512,10 +2080,10 @@
       "name": "South Korea at South Africa",
       "venue": "Estadio BBVA",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2526,8 +2094,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/rsa.png",
           "color": "#FFB81C",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 1,
+          "winner": true
         },
         {
           "id": "451",
@@ -2541,25 +2109,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+450",
-          "draw": "+300",
-          "away": "-155"
-        },
-        "implied": {
-          "home": 0.18181818181818182,
-          "draw": 0.25,
-          "away": 0.6078431372549019
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760466/south-korea-south-africa"
     },
     {
@@ -2569,10 +2119,10 @@
       "name": "Ivory Coast at Curaçao",
       "venue": "Lincoln Financial Field",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2594,29 +2144,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/civ.png",
           "color": "#FF8200",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 2,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+1800",
-          "draw": "+800",
-          "away": "-700"
-        },
-        "implied": {
-          "home": 0.05263157894736842,
-          "draw": 0.1111111111111111,
-          "away": 0.875
-        },
-        "favorite": "away",
-        "overUnder": 3.5,
-        "spread": {
-          "home": "+2.5",
-          "away": "-2.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760473/ivory-coast-curacao"
     },
     {
@@ -2626,10 +2158,10 @@
       "name": "Germany at Ecuador",
       "venue": "MetLife Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2640,8 +2172,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/ecu.png",
           "color": "#ffdd00",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 2,
+          "winner": true
         },
         {
           "id": "481",
@@ -2651,29 +2183,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/ger.png",
           "color": "#FFFFFF",
           "homeAway": "away",
-          "score": 0,
+          "score": 1,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+400",
-          "draw": "+300",
-          "away": "-145"
-        },
-        "implied": {
-          "home": 0.2,
-          "draw": 0.25,
-          "away": 0.5918367346938775
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760468/germany-ecuador"
     },
     {
@@ -2683,10 +2197,10 @@
       "name": "Sweden at Japan",
       "venue": "AT&T Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2697,7 +2211,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/jpn.png",
           "color": "#000555",
           "homeAway": "home",
-          "score": 0,
+          "score": 1,
           "winner": false
         },
         {
@@ -2708,29 +2222,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/swe.png",
           "color": "#fecb00",
           "homeAway": "away",
-          "score": 0,
+          "score": 1,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+115",
-          "draw": "+250",
-          "away": "+240"
-        },
-        "implied": {
-          "home": 0.46511627906976744,
-          "draw": 0.2857142857142857,
-          "away": 0.29411764705882354
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760471/sweden-japan"
     },
     {
@@ -2740,10 +2236,10 @@
       "name": "Netherlands at Tunisia",
       "venue": "GEHA Field at Arrowhead Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2754,7 +2250,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/tun.png",
           "color": "#D20300",
           "homeAway": "home",
-          "score": 0,
+          "score": 1,
           "winner": false
         },
         {
@@ -2765,29 +2261,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/ned.png",
           "color": "#fb5d00",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+850",
-          "draw": "+450",
-          "away": "-310"
-        },
-        "implied": {
-          "home": 0.10526315789473684,
-          "draw": 0.18181818181818182,
-          "away": 0.7560975609756098
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+1.5",
-          "away": "-1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760472/netherlands-tunisia"
     },
     {
@@ -2797,10 +2275,10 @@
       "name": "Australia at Paraguay",
       "venue": "Levi's Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2826,25 +2304,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+110",
-          "draw": "+250",
-          "away": "+255"
-        },
-        "implied": {
-          "home": 0.47619047619047616,
-          "draw": 0.2857142857142857,
-          "away": 0.28169014084507044
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760469/australia-paraguay"
     },
     {
@@ -2854,10 +2314,10 @@
       "name": "United States at Türkiye",
       "venue": "SoFi Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2868,8 +2328,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/tur.png",
           "color": "#ffffff",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         },
         {
           "id": "660",
@@ -2879,29 +2339,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/usa.png",
           "color": "#d42339",
           "homeAway": "away",
-          "score": 0,
+          "score": 2,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+160",
-          "draw": "+285",
-          "away": "+150"
-        },
-        "implied": {
-          "home": 0.38461538461538464,
-          "draw": 0.2597402597402597,
-          "away": 0.4
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760470/united-states-turkiye"
     },
     {
@@ -2911,10 +2353,10 @@
       "name": "France at Norway",
       "venue": "Gillette Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2925,7 +2367,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/nor.png",
           "color": "#C8102E",
           "homeAway": "home",
-          "score": 0,
+          "score": 1,
           "winner": false
         },
         {
@@ -2936,29 +2378,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/fra.png",
           "color": "#000080",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 4,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+330",
-          "draw": "+290",
-          "away": "-125"
-        },
-        "implied": {
-          "home": 0.23255813953488372,
-          "draw": 0.2564102564102564,
-          "away": 0.5555555555555556
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760475/france-norway"
     },
     {
@@ -2968,10 +2392,10 @@
       "name": "Iraq at Senegal",
       "venue": "BMO Field",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -2980,10 +2404,10 @@
           "shortName": "Senegal",
           "abbreviation": "SEN",
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/sen.png",
-          "color": "#006436",
+          "color": "#FFFFFF",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 5,
+          "winner": true
         },
         {
           "id": "4375",
@@ -2991,31 +2415,13 @@
           "shortName": "Iraq",
           "abbreviation": "IRQ",
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/irq.png",
-          "color": "#0A4D2E",
+          "color": "#FFFFFF",
           "homeAway": "away",
           "score": 0,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-330",
-          "draw": "+450",
-          "away": "+1000"
-        },
-        "implied": {
-          "home": 0.7674418604651163,
-          "draw": 0.18181818181818182,
-          "away": 0.09090909090909091
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-1.5",
-          "away": "+1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760474/iraq-senegal"
     },
     {
@@ -3025,10 +2431,10 @@
       "name": "Saudi Arabia at Cape Verde",
       "venue": "NRG Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3054,25 +2460,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+175",
-          "draw": "+275",
-          "away": "+140"
-        },
-        "implied": {
-          "home": 0.36363636363636365,
-          "draw": 0.26666666666666666,
-          "away": 0.4166666666666667
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760478/saudi-arabia-cape-verde"
     },
     {
@@ -3082,10 +2470,10 @@
       "name": "Spain at Uruguay",
       "venue": "Estadio Akron",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3107,29 +2495,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/esp.png",
           "color": "#c60b1e",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 1,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+500",
-          "draw": "+330",
-          "away": "-185"
-        },
-        "implied": {
-          "home": 0.16666666666666666,
-          "draw": 0.23255813953488372,
-          "away": 0.6491228070175439
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760479/spain-uruguay"
     },
     {
@@ -3139,10 +2509,10 @@
       "name": "Iran at Egypt",
       "venue": "Lumen Field",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3153,7 +2523,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/egy.png",
           "color": "#D20300",
           "homeAway": "home",
-          "score": 0,
+          "score": 1,
           "winner": false
         },
         {
@@ -3164,29 +2534,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/irn.png",
           "color": "#FFFFFF",
           "homeAway": "away",
-          "score": 0,
+          "score": 1,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+110",
-          "draw": "+215",
-          "away": "+300"
-        },
-        "implied": {
-          "home": 0.47619047619047616,
-          "draw": 0.31746031746031744,
-          "away": 0.25
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760476/iran-egypt"
     },
     {
@@ -3196,10 +2548,10 @@
       "name": "Belgium at New Zealand",
       "venue": "BC Place",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3210,7 +2562,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/nzl.png",
           "color": "#000000",
           "homeAway": "home",
-          "score": 0,
+          "score": 1,
           "winner": false
         },
         {
@@ -3221,29 +2573,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/bel.png",
           "color": "#E30613",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 5,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+1200",
-          "draw": "+550",
-          "away": "-425"
-        },
-        "implied": {
-          "home": 0.07692307692307693,
-          "draw": 0.15384615384615385,
-          "away": 0.8095238095238095
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+1.5",
-          "away": "-1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760477/belgium-new-zealand"
     },
     {
@@ -3253,10 +2587,10 @@
       "name": "Ghana at Croatia",
       "venue": "Lincoln Financial Field",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3267,8 +2601,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/cro.png",
           "color": "#ff0000",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 2,
+          "winner": true
         },
         {
           "id": "4469",
@@ -3278,29 +2612,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/gha.png",
           "color": "#fbd632",
           "homeAway": "away",
-          "score": 0,
+          "score": 1,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "-170",
-          "draw": "+310",
-          "away": "+500"
-        },
-        "implied": {
-          "home": 0.6296296296296297,
-          "draw": 0.24390243902439024,
-          "away": 0.16666666666666666
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760480/ghana-croatia"
     },
     {
@@ -3310,10 +2626,10 @@
       "name": "England at Panama",
       "venue": "MetLife Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3335,29 +2651,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/eng.png",
           "color": "#ffffff",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 2,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+900",
-          "draw": "+600",
-          "away": "-390"
-        },
-        "implied": {
-          "home": 0.1,
-          "draw": 0.14285714285714285,
-          "away": 0.7959183673469388
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+1.5",
-          "away": "-1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760485/england-panama"
     },
     {
@@ -3367,10 +2665,10 @@
       "name": "Portugal at Colombia",
       "venue": "Hard Rock Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3396,25 +2694,7 @@
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+265",
-          "draw": "+250",
-          "away": "+110"
-        },
-        "implied": {
-          "home": 0.273972602739726,
-          "draw": 0.2857142857142857,
-          "away": 0.47619047619047616
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760481/portugal-colombia"
     },
     {
@@ -3424,10 +2704,10 @@
       "name": "Uzbekistan at Congo DR",
       "venue": "Mercedes-Benz Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3438,8 +2718,8 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/rdc.png",
           "color": "#418fde",
           "homeAway": "home",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         },
         {
           "id": "2570",
@@ -3449,29 +2729,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/uzb.png",
           "color": "#ffffff",
           "homeAway": "away",
-          "score": 0,
+          "score": 1,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+110",
-          "draw": "+265",
-          "away": "+240"
-        },
-        "implied": {
-          "home": 0.47619047619047616,
-          "draw": 0.273972602739726,
-          "away": 0.29411764705882354
-        },
-        "favorite": "home",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "-0.5",
-          "away": "+0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760482/uzbekistan-congo-dr"
     },
     {
@@ -3481,10 +2743,10 @@
       "name": "Austria at Algeria",
       "venue": "GEHA Field at Arrowhead Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3495,7 +2757,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/alg.png",
           "color": "#4F9A44",
           "homeAway": "home",
-          "score": 0,
+          "score": 3,
           "winner": false
         },
         {
@@ -3506,29 +2768,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/aut.png",
           "color": "#d72b2c",
           "homeAway": "away",
-          "score": 0,
+          "score": 3,
           "winner": false
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+205",
-          "draw": "+210",
-          "away": "+155"
-        },
-        "implied": {
-          "home": 0.32786885245901637,
-          "draw": 0.3225806451612903,
-          "away": 0.39215686274509803
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+0.5",
-          "away": "-0.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760484/austria-algeria"
     },
     {
@@ -3538,10 +2782,10 @@
       "name": "Argentina at Jordan",
       "venue": "AT&T Stadium",
       "status": {
-        "state": "pre",
-        "description": "Scheduled",
-        "detail": "Scheduled",
-        "completed": false
+        "state": "post",
+        "description": "Full Time",
+        "detail": "FT",
+        "completed": true
       },
       "competitors": [
         {
@@ -3552,7 +2796,7 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/jor.png",
           "color": "#E70000",
           "homeAway": "home",
-          "score": 0,
+          "score": 1,
           "winner": false
         },
         {
@@ -3563,29 +2807,11 @@
           "logo": "https://a.espncdn.com/i/teamlogos/countries/500/arg.png",
           "color": "#74acdf",
           "homeAway": "away",
-          "score": 0,
-          "winner": false
+          "score": 3,
+          "winner": true
         }
       ],
-      "odds": {
-        "provider": "DraftKings",
-        "moneyline": {
-          "home": "+1300",
-          "draw": "+650",
-          "away": "-525"
-        },
-        "implied": {
-          "home": 0.07142857142857142,
-          "draw": 0.13333333333333333,
-          "away": 0.84
-        },
-        "favorite": "away",
-        "overUnder": 2.5,
-        "spread": {
-          "home": "+1.5",
-          "away": "-1.5"
-        }
-      },
+      "odds": null,
       "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760483/argentina-jordan"
     }
   ],
@@ -3596,7 +2822,7 @@
       "date": "2026-06-28T19:00Z",
       "venue": "SoFi Stadium",
       "city": "Inglewood, California",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760486/group-b-2nd-place-group-a-2nd-place"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760486/canada-south-africa"
     },
     {
       "matchNumber": 74,
@@ -3604,7 +2830,7 @@
       "date": "2026-06-29T20:30Z",
       "venue": "Gillette Stadium",
       "city": "Foxborough, Massachusetts",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760489/third-place-group-abcdf-group-e-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760489/paraguay-germany"
     },
     {
       "matchNumber": 75,
@@ -3612,7 +2838,7 @@
       "date": "2026-06-30T01:00Z",
       "venue": "Estadio BBVA",
       "city": "Guadalupe",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760488/group-c-2nd-place-group-f-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760488/morocco-netherlands"
     },
     {
       "matchNumber": 76,
@@ -3620,7 +2846,7 @@
       "date": "2026-06-29T17:00Z",
       "venue": "NRG Stadium",
       "city": "Houston, Texas",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760487/group-f-2nd-place-group-c-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760487/japan-brazil"
     },
     {
       "matchNumber": 77,
@@ -3628,7 +2854,7 @@
       "date": "2026-06-30T21:00Z",
       "venue": "MetLife Stadium",
       "city": "East Rutherford, New Jersey",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760492/third-place-group-cdfgh-group-i-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760492/sweden-france"
     },
     {
       "matchNumber": 78,
@@ -3636,7 +2862,7 @@
       "date": "2026-06-30T17:00Z",
       "venue": "AT&T Stadium",
       "city": "Arlington, Texas",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760490/group-i-2nd-place-group-e-2nd-place"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760490/norway-ivory-coast"
     },
     {
       "matchNumber": 79,
@@ -3644,7 +2870,7 @@
       "date": "2026-07-01T01:00Z",
       "venue": "Estadio Banorte",
       "city": "Mexico City",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760491/third-place-group-cefhi-mexico"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760491/ecuador-mexico"
     },
     {
       "matchNumber": 80,
@@ -3652,7 +2878,7 @@
       "date": "2026-07-01T16:00Z",
       "venue": "Mercedes-Benz Stadium",
       "city": "Atlanta, Georgia",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760495/third-place-group-ehijk-group-l-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760495/congo-dr-england"
     },
     {
       "matchNumber": 81,
@@ -3660,7 +2886,7 @@
       "date": "2026-07-02T00:00Z",
       "venue": "Levi's Stadium",
       "city": "Santa Clara, California",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760494/third-place-group-befij-group-d-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760494/bosnia-herzegovina-united-states"
     },
     {
       "matchNumber": 82,
@@ -3668,7 +2894,7 @@
       "date": "2026-07-01T20:00Z",
       "venue": "Lumen Field",
       "city": "Seattle, Washington",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760493/third-place-group-aehij-group-g-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760493/senegal-belgium"
     },
     {
       "matchNumber": 83,
@@ -3676,7 +2902,7 @@
       "date": "2026-07-02T23:00Z",
       "venue": "BMO Field",
       "city": "Toronto",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760496/group-l-2nd-place-group-k-2nd-place"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760496/croatia-portugal"
     },
     {
       "matchNumber": 84,
@@ -3684,7 +2910,7 @@
       "date": "2026-07-02T19:00Z",
       "venue": "SoFi Stadium",
       "city": "Inglewood, California",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760497/group-j-2nd-place-group-h-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760497/austria-spain"
     },
     {
       "matchNumber": 85,
@@ -3692,7 +2918,7 @@
       "date": "2026-07-03T03:00Z",
       "venue": "BC Place",
       "city": "Vancouver",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760498/third-place-group-efgij-group-b-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760498/algeria-switzerland"
     },
     {
       "matchNumber": 86,
@@ -3700,7 +2926,7 @@
       "date": "2026-07-03T22:00Z",
       "venue": "Hard Rock Stadium",
       "city": "Miami Gardens, Florida",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760500/group-h-2nd-place-group-j-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760500/cape-verde-argentina"
     },
     {
       "matchNumber": 87,
@@ -3708,7 +2934,7 @@
       "date": "2026-07-04T01:30Z",
       "venue": "GEHA Field at Arrowhead Stadium",
       "city": "Kansas City, Missouri",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760501/third-place-group-deijl-group-k-winner"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760501/ghana-colombia"
     },
     {
       "matchNumber": 88,
@@ -3716,10 +2942,34 @@
       "date": "2026-07-03T18:00Z",
       "venue": "AT&T Stadium",
       "city": "Arlington, Texas",
-      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760499/group-g-2nd-place-group-d-2nd-place"
+      "sourceUrl": "https://www.espn.com/soccer/match/_/gameId/760499/egypt-australia"
     }
   ],
   "thirdPlaceRules": [
+    {
+      "option": 67,
+      "groups": [
+        "B",
+        "D",
+        "E",
+        "F",
+        "I",
+        "J",
+        "K",
+        "L"
+      ],
+      "key": "BDEFIJKL",
+      "assignments": {
+        "1A": "3E",
+        "1B": "3J",
+        "1D": "3B",
+        "1E": "3D",
+        "1G": "3I",
+        "1I": "3F",
+        "1K": "3L",
+        "1L": "3K"
+      }
+    },
     {
       "option": 1,
       "groups": [
@@ -5301,30 +4551,6 @@
         "1G": "3H",
         "1I": "3G",
         "1K": "3I",
-        "1L": "3K"
-      }
-    },
-    {
-      "option": 67,
-      "groups": [
-        "B",
-        "D",
-        "E",
-        "F",
-        "I",
-        "J",
-        "K",
-        "L"
-      ],
-      "key": "BDEFIJKL",
-      "assignments": {
-        "1A": "3E",
-        "1B": "3J",
-        "1D": "3B",
-        "1E": "3D",
-        "1G": "3I",
-        "1I": "3F",
-        "1K": "3L",
         "1L": "3K"
       }
     },
